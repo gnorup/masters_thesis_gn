@@ -52,7 +52,7 @@ def process_features(task):
             subject_folder = os.path.join(base_dir, subject_id)
         else:
             # Not a subject folder (e.g. a demographics file) -> continue to next folder
-            continue;
+            continue
 
         print(f"Calculating features for subject {subject_id}...")
 
