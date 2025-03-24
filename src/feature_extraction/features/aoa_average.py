@@ -1,9 +1,14 @@
 # age of acquisition (AoA) average (average age when people typically learn a word) -> idea that more complex vocabulary if higher
 
 import re
+import os
 import pandas as pd # to load AoA dataset
 
-def load_aoa_lexicon(path="/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src/files/AoA_ratings_Kuperman_et_al_BRM.xlsx"):
+from config.constants import GIT_DIRECTORY
+
+
+def load_aoa_lexicon():
+    path = os.path.join(GIT_DIRECTORY, "src/files/AoA_ratings_Kuperman_et_al_BRM.xlsx")
     df = pd.read_excel(path) # load AoA lexicon
     return dict(zip(df["Word"].str.lower(), df["Rating.Mean"])) # creates dictionary for words and their average AoA rating
 

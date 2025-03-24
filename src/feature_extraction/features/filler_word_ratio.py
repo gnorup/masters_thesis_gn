@@ -7,10 +7,12 @@ def filler_word_ratio(text, filler_words=None):
     if isinstance(text, float):  # handle NaN
         text = ""
 
+    # todo: why these filler words?
     if filler_words is None:
         filler_words = {"um", "uh", "er", "hmm", "like", "well", "you know", "i mean", "so"} # custom list of common filler words / phrases
 
     # tokenize text to lowercase words
+    # todo: isn't this the same as n_words?
     words = [w.lower() for w in re.findall(r"\b\w+\b", text)] # gets actual words without punctuation and symbols
     total_words = len(words)
 

@@ -6,8 +6,8 @@ import stanza  # for NLP processing, including sentence segmentation
 # add the parent directory to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))) # folder of current script -> go to parent directory -> get full path
 
-from features.n_words import n_words
-from features.n_sentences import n_sentences
+from feature_extraction.features.n_words import n_words
+from feature_extraction.features.n_sentences import n_sentences
 
 # load Stanza pipeline with sentence segmentation and tokenization
 stanza.download("en")

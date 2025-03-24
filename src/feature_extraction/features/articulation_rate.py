@@ -1,4 +1,4 @@
-from features import n_words
+from feature_extraction.features import n_words
 import librosa
 
 def articulation_rate(text, audio_path):

@@ -1,4 +1,4 @@
-from features import n_words
+from feature_extraction.features import n_words
 
 def speech_rate(text, total_duration): # transcription & length of audio in seconds from csv-file
     """
