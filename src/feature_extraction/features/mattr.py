@@ -1,13 +1,17 @@
-# moving average TTR -> calculate TTR in window and average TTRs over all windows (bc TTR drops just because text gets longer)
+# feature idea: Luz et al. (2021b); window size based on Cunningham & Haley (2020)
 
-import re # regular expressions for word tokenization
+# Moving-Average Type-Token Ratio (MATTR)
+# Calculates TTR in a sliding window and averages these local TTRs across the text.
+# This smooths out the bias that occurs when TTR decreases in longer texts.
 
-def mattr(text, window_size=50): # text input; window 50 words for now
-    words = [w.lower() for w in re.findall(r"\b\w+\b", text)] # tokenizes text into words only, removes punctuation and converts to lowercase only
-    if len(words) < window_size: # none if text is too short to fill a single window
+from feature_extraction.features import n_words
+
+def mattr(text, window_size=50): # default: window of 50 words
+    words = n_words(text, return_words=True) # uses word-list from n_words
+    if len(words) < window_size: # returns none if text is too short to fill a single window
         return None
-    ttrs = []
-    for i in range(len(words) - window_size + 1): # slides window of defined length over word list
-        window = words[i:i+window_size]
-        ttrs.append(len(set(window)) / window_size) # compute TTR for unique words in window-size
-    return sum(ttrs) / len(ttrs) # averages local TTRs to get final MATTR
+    ttrs = [
+        len(set(words[i:i + window_size])) / window_size # unique words (types) / window size (tokens)
+        for i in range(len(words) - window_size + 1) # slide window over text one word at a time
+    ]
+    return sum(ttrs) / len(ttrs) # averages local TTRs to get MATTR

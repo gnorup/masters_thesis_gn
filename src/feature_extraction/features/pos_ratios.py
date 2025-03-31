@@ -1,3 +1,5 @@
+# feature idea: Lindsay et al. (2021); Beltrami et al. (2018); Hernández-Domínguez et al. (2018)
+
 import spacy
 from scipy.stats import entropy
 
@@ -9,8 +11,9 @@ def pos_ratios_spacy(text):
     Compute the following POS ratios using spaCy:
     - Ratios for all POS categories (each count divided by total words)
     - Open-to-Closed Class Ratio (Open/Closed)
-    - Structural ratios: NOUN/VERB, PRON/NOUN, DET/NOUN, AUX/VERB, ADP/VERB, CCONJ/SCONJ
+    - Structural ratios: NOUN/VERB, PRON/NOUN, DET/NOUN, AUX/VERB
     - POS Entropy (syntactic variety)
+    - Lexical density (content words / all words)
     """
 
     if isinstance(text, float):  # handle NaN values
@@ -26,25 +29,29 @@ def pos_ratios_spacy(text):
     }
 
     total_words = 0  # word counter
+    content_words = 0 # for lexical density
 
     for token in doc:
         if token.is_alpha:  # only count actual words (ignore punctuation, numbers, etc.)
             total_words += 1
+            if token.pos_ in ["NOUN", "VERB", "ADJ", "ADV"]:
+                content_words += 1
             if token.pos_ in counts: # gets universal POS tag
                 counts[token.pos_] += 1
             else:
                 counts["OTHER"] += 1  # catch any unclassified tokens
 
-    # compute POS ratios (and avoid division by zero)
+    # compute POS ratios
     pos_ratios = {pos: (counts[pos] / total_words if total_words > 0 else None) for pos in counts}
+
+    # compute lexical density
+    lexical_density = content_words / total_words if total_words > 0 else None
 
     # compute structural linguistic ratios
     noun_verb_ratio = counts["NOUN"] / counts["VERB"] if counts["VERB"] > 0 else None
     pronoun_noun_ratio = counts["PRON"] / counts["NOUN"] if counts["NOUN"] > 0 else None
     determiner_noun_ratio = counts["DET"] / counts["NOUN"] if counts["NOUN"] > 0 else None
     aux_verb_ratio = counts["AUX"] / counts["VERB"] if counts["VERB"] > 0 else None # how often auxiliary verbs support full verbs (for grammatical complexity)
-    adp_verb_ratio = counts["ADP"] / counts["VERB"] if counts["VERB"] > 0 else None # prepositions per verb (for relational structure, complexity)
-    cconj_sconj_ratio = counts["CCONJ"] / counts["SCONJ"] if counts["SCONJ"] > 0 else None # coordination vs. subordination (syntactic style)
 
     # Open-to-Closed Class Ratio
     open_class_count = sum(counts[pos] for pos in ["ADJ", "ADV", "INTJ", "NOUN", "PROPN", "VERB"]) # words that carry content / meaning
@@ -61,10 +68,9 @@ def pos_ratios_spacy(text):
         "PRON/NOUN": pronoun_noun_ratio,
         "DET/NOUN": determiner_noun_ratio,
         "AUX/VERB": aux_verb_ratio,
-        "ADP/VERB": adp_verb_ratio,
-        "CCONJ/SCONJ": cconj_sconj_ratio,
         "OPEN/CLOSED": open_closed_ratio,
-        "POS_ENTROPY": pos_entropy
+        "POS_ENTROPY": pos_entropy,
+        "LEXICAL_DENSITY": lexical_density
     })
 
     return pos_ratios

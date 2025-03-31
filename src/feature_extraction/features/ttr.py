@@ -1,7 +1,10 @@
+# feature idea: Hamrick et al. (2023)
+
 # Type-Token Ratio -> lexical diversity; number of unique words / total number of words
 
-import re # regex module to extract word tokens from text
+from feature_extraction.features import n_words
 
 def ttr(text):
-    words = [w.lower() for w in re.findall(r"\b\w+\b", text)] # finds all word-like sequences, bounded by word-boundaries; converts all to lowercase -> list of words
-    return len(set(words)) / len(words) if words else None # set(words) keeps only unique words, len(words) total number of words -> TTR = types / tokens
+    words = n_words(text, return_words=True) # uses list from n_words
+    return len(set(words)) / len(words) if words else None
+    # set(words) keeps only unique words, len(words) total number of words -> TTR = types / tokens

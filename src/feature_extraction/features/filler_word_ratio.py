@@ -1,34 +1,32 @@
+# feature idea: Hamrick et al. (2023)
+
+# sources for chosen filler words: Hamrick_et_al_2023; James_&_Goring_2018; Horton_et_al_2011; Asgari_et_al_2017;
+# Tucker_&_Mukai_2022; Wright_2016; Mortensen_et_al_2006
+
 import re # regular expression module for word tokenization
+from feature_extraction.features.n_words import n_words, clean_text
 
 def filler_word_ratio(text, filler_words=None):
     """
     Calculates the proportion of filler words in a text.
     """
-    if isinstance(text, float):  # handle NaN
+    if isinstance(text, float):
         text = ""
 
-    # todo: why these filler words?
+    # custom list of common filler words / phrases
     if filler_words is None:
-        filler_words = {"um", "uh", "er", "hmm", "like", "well", "you know", "i mean", "so"} # custom list of common filler words / phrases
+        filler_words = {"um", "uh", "err", "hmm", "like", "well", "you know", "i mean"}
 
-    # tokenize text to lowercase words
-    # todo: isn't this the same as n_words?
-    words = [w.lower() for w in re.findall(r"\b\w+\b", text)] # gets actual words without punctuation and symbols
-    total_words = len(words)
+    total_words = n_words(text)
+    if total_words == 0:
+        return None
 
-    # count filler words
-    filler_count = 0
-    i = 0
-    while i < len(words): # loop through text word by word, index-based
-        matched = False
-        for phrase in sorted(filler_words, key=lambda x: -len(x.split())):  # check multi-word fillers first
-            phrase_tokens = phrase.split() # slice current section of words list
-            if words[i:i + len(phrase_tokens)] == phrase_tokens: # if slice matches phrase, it's counted as a filler
-                filler_count += 1
-                i += len(phrase_tokens) # skips ahead len(phrase_tokens) when matched, so that it doesn't double-count
-                matched = True
-                break
-        if not matched:
-            i += 1
+    cleaned = clean_text(text)
+    filler_count = sum(
+        len(re.findall(r'\b' + re.escape(phrase) + r'\b', cleaned)) # counts occurrence of phrases
+        for phrase in filler_words
+    )
 
-    return filler_count / total_words if total_words > 0 else None # ratio of filler words to total words (None if text is empty)
+    return filler_count / total_words # ratio of filler words to total words (None if text is empty)
+
+# Note: overlapping filler expressions may be double-counted if filler_words contain subphrases
