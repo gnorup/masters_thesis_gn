@@ -6,3 +6,9 @@ from .ttr import ttr
 from .mattr import mattr
 from .concreteness import concreteness_score
 from .aoa_average import aoa_average
+from .avg_word_length import average_word_length
+from .lexical_diversity_features import (
+    brunets_index,
+    honores_statistic,
+    guirauds_statistic
+)

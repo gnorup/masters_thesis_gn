@@ -1,10 +1,14 @@
 import sys
+# add the root of the project (where src/ lives) to the path
+sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
+
 import os
 import pandas as pd
 
 from feature_extraction.features import (
     n_words, clean_text, pos_ratios_spacy, filler_word_ratio,
-    ttr, mattr, concreteness_score, aoa_average
+    ttr, mattr, concreteness_score, aoa_average, average_word_length,
+    brunets_index, honores_statistic, guirauds_statistic
 )
 
 from feature_extraction.audio import (
@@ -18,9 +22,6 @@ from feature_extraction.features.aoa_average import load_aoa_lexicon
 from config.constants import DATA_DIRECTORY
 from config.constants import GIT_DIRECTORY
 
-
-# add the root of the project (where src/ lives) to the path
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 
 def load_audio_durations(subject_folder, task):
@@ -94,6 +95,10 @@ def process_features(task):
             text_features["filler_word_ratio"] = filler_word_ratio(text)
             text_features["concreteness_score"] = concreteness_score(text, concreteness_lexicon)
             text_features["aoa_average"] = aoa_average(text, aoa_lexicon)
+            text_features["average_word_length"] = average_word_length(text)
+            text_features["brunets_index"] = brunets_index(text)
+            text_features["honores_statistic"] = honores_statistic(text)
+            text_features["guirauds_statistic"] = guirauds_statistic(text)
 
             pos_ratios = pos_ratios_spacy(text)
 
