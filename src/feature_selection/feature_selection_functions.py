@@ -1,4 +1,4 @@
-# steps: 1) load features & preprocessed scores, 2) correlation-matrix, 3) VIF, 4) forward-selection, 5) save selected features for each task-score-combination, 6) compare all selected features, 7) build general feature set
+# steps: 1) load features & scores, 2) correlation-matrix, 3) VIF, 4) forward-selection, 5) save selected features for each task-score-combination, 6) compare all selected features, 7) build general feature set
 
 # setup
 import seaborn as sns
@@ -11,6 +11,28 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from matplotlib.patches import Patch
+
+
+def load_filtered_features(
+    task_name,
+    features_dir,
+    selected_columns=None,
+    id_column="Subject_ID"
+):
+    """
+    Loads and optionally filters features for a given task.
+    Returns: features_df (pd.DataFrame): filtered features DataFrame
+    """
+    # Load feature file
+    features_path = os.path.join(features_dir, f"{task_name}.csv")
+    features = pd.read_csv(features_path)
+
+    # filter if column list is provided
+    if selected_columns is not None:
+        features = features[[id_column] + selected_columns]
+
+    return features
+
 
 
 def compute_correlation_matrix(X_scaled, y, task_name, target, output_dir):
@@ -211,74 +233,4 @@ def evaluate_on_test_set(X_train, y_train, X_test, y_test, selected_features, ta
 
 
     return model, y_pred, metrics_df
-
-import pandas as pd
-import os
-
-
-def save_crossval_results(
-    r2_list, rmse_list, mae_list,
-    r2_mean, r2_std, r2_se, r2_ci_low, r2_ci_high,
-    task_name, target, output_dir,
-    all_preds=None  # optional: pass predictions for plotting
-):
-
-    os.makedirs(output_dir, exist_ok=True)
-
-    # 1. Save per-fold results
-    cv_df = pd.DataFrame({
-        "Fold": list(range(1, len(r2_list) + 1)),
-        "R2": r2_list,
-        "RMSE": rmse_list,
-        "MAE": mae_list
-    })
-    cv_df_path = os.path.join(output_dir, f"cv_folds_{task_name}_{target}.csv")
-    cv_df.to_csv(cv_df_path, index=False)
-
-    # 2. Save summary
-    summary_df = pd.DataFrame({
-        "R2_Mean": [r2_mean],
-        "R2_Std": [r2_std],
-        "R2_SE": [r2_se],
-        "R2_CI_Low": [r2_ci_low],
-        "R2_CI_High": [r2_ci_high],
-        "RMSE_Mean": [np.mean(rmse_list)],
-        "MAE_Mean": [np.mean(mae_list)]
-    })
-    summary_path = os.path.join(output_dir, f"cv_summary_{task_name}_{target}.csv")
-    summary_df.to_csv(summary_path, index=False)
-
-    print(f"saved per-fold CV results to:\n{cv_df_path}")
-    print(f"saved CV summary to:\n{summary_path}")
-
-    # 3. Save scatterplot
-    if all_preds is not None:
-        plt.figure(figsize=(7, 6))
-        for fold in all_preds['fold'].unique():
-            fold_df = all_preds[all_preds['fold'] == fold]
-            plt.scatter(fold_df["y_test"], fold_df["y_pred"], label=f"Fold {fold + 1}", alpha=0.7)
-
-        plt.plot(
-            [all_preds["y_test"].min(), all_preds["y_test"].max()],
-            [all_preds["y_test"].min(), all_preds["y_test"].max()],
-            linestyle='--', color='gray', label="Perfect Prediction"
-        )
-
-        plt.xlabel("Actual Score", fontsize=12, fontweight="bold")
-        plt.ylabel("Predicted Score", fontsize=12, fontweight="bold")
-        plt.title(f"{task_name.title()}: Cross-Validated Predictions", fontsize=14, fontweight="bold")
-        plt.legend()
-        plt.grid(True)
-
-        plot_path = os.path.join(output_dir, f"cv_prediction_plot_{task_name}_{target}.png")
-        plt.savefig(plot_path, dpi=300, bbox_inches="tight")
-        plt.close()
-
-        print(f"CV prediction plot saved to: {plot_path}")
-
-
-
-
-
-
 

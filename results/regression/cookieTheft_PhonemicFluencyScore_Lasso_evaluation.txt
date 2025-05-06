@@ -1,0 +1,4 @@
+Regression Evaluation (Lasso Regression) for cookieTheft → PhonemicFluencyScore
+R²: 0.022
+RMSE: 4.471
+MAE: 3.575

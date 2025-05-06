@@ -58,10 +58,6 @@ def pos_ratios_spacy(text):
     closed_class_count = sum(counts[pos] for pos in ["ADP", "AUX", "CCONJ", "DET", "NUM", "PART", "PRON", "SCONJ"]) # more grammatical words
     open_closed_ratio = open_class_count / closed_class_count if closed_class_count > 0 else None # high = more semantic richness; low = more functional / grammatical speech
 
-    # POS Entropy (syntactic variety) -> how diverse POS usage is
-    pos_frequencies = [counts[pos] for pos in counts if counts[pos] > 0]
-    pos_entropy = entropy(pos_frequencies) if pos_frequencies else None
-
     # combine all ratios in a single dictionary
     pos_ratios.update({
         "NOUN/VERB": noun_verb_ratio,
@@ -69,7 +65,6 @@ def pos_ratios_spacy(text):
         "DET/NOUN": determiner_noun_ratio,
         "AUX/VERB": aux_verb_ratio,
         "OPEN/CLOSED": open_closed_ratio,
-        "POS_ENTROPY": pos_entropy,
         "LEXICAL_DENSITY": lexical_density
     })
 

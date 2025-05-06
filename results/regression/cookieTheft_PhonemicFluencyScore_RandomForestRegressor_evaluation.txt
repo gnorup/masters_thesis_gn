@@ -1,0 +1,4 @@
+Regression Evaluation (Random Forest) for cookieTheft → PhonemicFluencyScore
+R²: 0.014
+RMSE: 4.491
+MAE: 3.567
