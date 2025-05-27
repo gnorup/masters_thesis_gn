@@ -80,7 +80,7 @@ def process_features(task):
         audio_file_path = load_audio_file(subject_folder, task)
 
         text_features = {
-            "n_words": None, "ttr": None, "mattr": None, "filler_word_ratio": None,
+            "n_words": None, "ttr": None, "filler_word_ratio": None,
             "concreteness_score": None, "aoa_average": None
         }
         pos_ratios = {}
@@ -91,7 +91,7 @@ def process_features(task):
             # linguistic features
             text_features["n_words"] = n_words(text)
             text_features["ttr"] = ttr(text)
-            text_features["mattr"] = mattr(text)
+            text_features.update(mattr_all_windows(text, window_sizes=[10, 20, 30, 40, 50]))
             text_features["filler_word_ratio"] = filler_word_ratio(text)
             text_features["concreteness_score"] = concreteness_score(text, concreteness_lexicon)
             text_features["aoa_average"] = aoa_average(text, aoa_lexicon)

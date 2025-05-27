@@ -242,7 +242,7 @@ all_results = []  # create an empty list to store all results (ICC + Regression 
 for score_m, score_auto in score_pairs:
     score_type = score_m.replace("_score_m", "")  # extract base name
 
-    # Compute ICC
+    # compute ICC
     df_icc = pd.DataFrame({
         "subject": list(range(len(df_merged))) * 2,  # duplicate each subject ID so that both raters ("manual" and "automatic") are properly matched
         "rater": ["manual"] * len(df_merged) + ["automatic"] * len(df_merged),
@@ -251,7 +251,7 @@ for score_m, score_auto in score_pairs:
 
     icc_all = pg.intraclass_corr(data=df_icc, targets="subject", raters="rater", ratings="score")
 
-    # Compute linear regression
+    # compute linear regression
     X = df_merged[[score_m]]  # independent variable (manual score)
     y = df_merged[score_auto]  # dependent variable (automatic score)
 
@@ -262,10 +262,10 @@ for score_m, score_auto in score_pairs:
     regression_intercept = model.intercept_
     regression_r2 = model.score(X, y)
 
-    # Compute correlation coefficient
+    # compute correlation coefficient
     correlation_coeff = np.corrcoef(df_merged[score_m], df_merged[score_auto])[0, 1]
 
-    # Store results for ICC (2,1) and ICC (3,1)
+    # store results for ICC (2,1) and ICC (3,1)
     for _, row in icc_all.iterrows():
         if row["Type"] in ["ICC2", "ICC3"]:
             all_results.append({
@@ -284,7 +284,7 @@ for score_m, score_auto in score_pairs:
                 "Correlation_Coefficient": correlation_coeff  # Include correlation coefficient for both types
             })
 
-# Convert results to data frame and save to CSV file
+# convert results to data frame and save to CSV file
 results_df = pd.DataFrame(all_results)  # convert to data frame
 results_df.to_csv("/Users/gilanorup/Desktop/Studium/MSc/MA/Score_Validierung/icc_regression_correlation_results.csv", index=False)  # save to CSV
 

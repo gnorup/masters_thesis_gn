@@ -1,5 +1,4 @@
 import pandas as pd
-import statsmodels.api as sm
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
@@ -7,7 +6,7 @@ import os
 import re
 import numpy as np
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 
@@ -49,6 +48,8 @@ def run_multiple_regression(
         random_state=42   # random seed for reproducibility (42 as default)
 ):
     """
+    runs multiple linear regression model and optionally saves results
+    returns: model, scaled data (X), y, train/test splits
     """
 
     # load data
@@ -57,10 +58,10 @@ def run_multiple_regression(
 
     # merge on subject ID
     df = pd.merge(features, scores[[id_column, target]], on=id_column)
-    df = df.dropna()
+    df = df.dropna() # drops rows with missing values
 
     # prepare variables
-    X_raw = df.drop(columns=[id_column, target])  # input features
+    X_raw = df.drop(columns=[id_column, target])  # input features (everything except ID and target)
     y = df[target]  # score to predict
 
     # standardize features (for scikit)
@@ -73,7 +74,7 @@ def run_multiple_regression(
         X_scaled, y, test_size=test_size, random_state=random_state
     )
 
-    # train and evaluate
+    # train and evaluate (using helper function)
     model, y_pred, r2, rmse, mae = train_and_evaluate(X_train, y_train, X_test, y_test)
 
     # base filename for saving results

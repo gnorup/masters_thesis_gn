@@ -1,4 +1,4 @@
-# feature idea: Fraser et al. (2015); Forbes-McKay (2004)
+# feature idea: Fraser et al. (2014, 2015); Forbes-McKay (2004)
 
 # Age of Acquisition (AoA) average (average age when people typically learn a word)
 # -> idea that more complex vocabulary if higher

@@ -3,15 +3,25 @@ import os
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
-from sklearn.model_selection import KFold
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 import numpy as np
+from sklearn.preprocessing import StandardScaler
+
+"""
+contains helper functions for: 
+- formatting titles
+- saving regression results and prediction plots
+- running manual K-Fold cross-validation 
+- saving cross-validation results 
+- new: cross-validation function using saved stratified folds
+"""
 
 
 def format_title(name):
-    """Formats variable names for more readable title."""
+    """formats variable names for more readable title."""
     name = re.sub(r'(?<!^)(?=[A-Z])', ' ', name)  # insert space before capitals
     return name.title().strip()
 
@@ -27,12 +37,12 @@ def save_regression_outputs(
 
     os.makedirs(output_dir, exist_ok=True)
 
-    # map model type names to nice readable names
+    # map model type names to more readable names
     model_name_mapping = {
         "LinearRegression": "Linear Regression",
         "Ridge": "Ridge Regression",
         "Lasso": "Lasso Regression",
-        "RandomForestRegressor": "Random Forest"
+        "RandomForestRegressor": "Random Forest Regression"
     }
 
     if model_type is None:
@@ -134,66 +144,18 @@ def save_regression_outputs(
 
 
 
-def cross_validate_model(X, y, model_class, model_params=None, n_splits=5, random_state=42):
-    """
-    Performs manual K-Fold cross-validation for any sklearn regression model.
-    Returns performance metrics and predictions.
-    """
-    kf = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
-
-    r2_scores = []
-    rmse_scores = []
-    mae_scores = []
-    predictions = []
-
-    for fold, (train_idx, test_idx) in enumerate(kf.split(X)):
-        X_train = X.iloc[train_idx]
-        X_test = X.iloc[test_idx]
-        y_train = y.iloc[train_idx]
-        y_test = y.iloc[test_idx]
-
-        if model_params is None:
-            model = model_class()
-        else:
-            model = model_class(**model_params)
-
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-
-        r2 = r2_score(y_test, y_pred)
-        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-        mae = mean_absolute_error(y_test, y_pred)
-
-        r2_scores.append(r2)
-        rmse_scores.append(rmse)
-        mae_scores.append(mae)
-
-        fold_df = pd.DataFrame({
-            "y_test": y_test.values,
-            "y_pred": y_pred,
-            "fold": fold
-        })
-        predictions.append(fold_df)
-
-        print(f"Fold {fold + 1} - R²: {r2:.3f}, RMSE: {rmse:.3f}, MAE: {mae:.3f}")
-
-    all_preds = pd.concat(predictions, ignore_index=True)
-
-    return r2_scores, rmse_scores, mae_scores, all_preds
-
-
 def save_crossval_results(
     r2_list, rmse_list, mae_list,
     r2_mean, r2_std, r2_se, r2_ci_low, r2_ci_high,
     task_name, target, output_dir,
-    all_preds=None, # optional: pass predictions for plotting,
+    all_preds=None, # optional: pass predictions for plotting
     model_type="LinearRegression"
 
 ):
 
     os.makedirs(output_dir, exist_ok=True)
 
-    # 1. Save per-fold results
+    # save per-fold results
     cv_df = pd.DataFrame({
         "Fold": list(range(1, len(r2_list) + 1)),
         "R2": r2_list,
@@ -203,7 +165,7 @@ def save_crossval_results(
     cv_df_path = os.path.join(output_dir, f"cv_folds_{task_name}_{target}_{model_type}.csv")
     cv_df.to_csv(cv_df_path, index=False)
 
-    # 2. Save summary
+    # save summary
     summary_df = pd.DataFrame({
         "R2_Mean": [r2_mean],
         "R2_Std": [r2_std],
@@ -219,7 +181,7 @@ def save_crossval_results(
     print(f"saved per-fold CV results to:\n{cv_df_path}")
     print(f"saved CV summary to:\n{summary_path}")
 
-    # 3. Save scatterplot
+    # save scatterplot
     if all_preds is not None:
         plt.figure(figsize=(7, 6))
         for fold in all_preds['fold'].unique():
@@ -244,3 +206,56 @@ def save_crossval_results(
 
         print(f"CV prediction plot saved to: {plot_path}")
 
+
+
+def stratified_cross_validation(
+    df, fold_column, model_class, model_params,
+    target_column, n_folds=5, feature_columns=None, model_name=""
+):
+    r2_scores = []
+    rmse_scores = []
+    mae_scores = []
+    all_preds = []
+
+    for fold in range(1, n_folds + 1):
+        train_df = df[df[fold_column] != fold] # all the other folds
+        test_df = df[df[fold_column] == fold] # current fold
+
+        # train test split (80/20)
+        X_train = train_df[feature_columns]
+        y_train = train_df[target_column]
+        X_test = test_df[feature_columns]
+        y_test = test_df[target_column]
+
+        # standardize
+        scaler = StandardScaler()
+        X_train_scaled = pd.DataFrame(scaler.fit_transform(X_train), columns=X_train.columns, index=X_train.index)
+        X_test_scaled = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns, index=X_test.index)
+
+        # train model
+        model = model_class(**model_params) if model_params else model_class()
+        model.fit(X_train_scaled, y_train)
+        y_pred = model.predict(X_test_scaled)
+
+        # model evaluation
+        r2 = r2_score(y_test, y_pred)
+        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+        mae = mean_absolute_error(y_test, y_pred)
+
+        r2_scores.append(r2)
+        rmse_scores.append(rmse)
+        mae_scores.append(mae)
+
+        fold_df = pd.DataFrame({
+            "y_test": y_test.values,
+            "y_pred": y_pred,
+            "fold": fold,
+            "model": model_name
+        })
+        all_preds.append(fold_df)
+
+        print(f"Fold {fold}: R² = {r2:.3f}, RMSE = {rmse:.2f}, MAE = {mae:.2f}")
+
+    all_preds_df = pd.concat(all_preds, ignore_index=True)
+
+    return r2_scores, rmse_scores, mae_scores, all_preds_df

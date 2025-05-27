@@ -19,6 +19,7 @@ def train_and_evaluate_regression_model(
     model_class options: LinearRegression, Ridge, Lasso, RandomForestRegressor
     model_params for Ridge and Lasso: {"alpha": x}
     model_params for Random Forest: {"n_estimators": x} (number of decision trees)
+    returns: model, evaluation scores, data splits, predictions
     """
 
     # standardize X

@@ -1,4 +1,4 @@
-# drop features that were all zero upon inspection and eGeMAPS (ausser shimmer & jitter)
+# drop features that were all zero upon inspection and eGeMAPS (except from shimmer & jitter)
 
 import pandas as pd
 import os
@@ -14,13 +14,20 @@ task_name = "cookieTheft"
 features = pd.read_csv(os.path.join(GIT_DIRECTORY, f"results/features/{task_name}.csv"))
 print(f"loaded {features.shape[0]} rows and {features.shape[1]} columns")
 
-output_path = "/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/results/features/filtered/cookieTheft_filtered.csv"
+output_path = os.path.join(
+    GIT_DIRECTORY,
+    "results", "features", "filtered", f"{task_name}_filtered.csv"
+)
+
+# drop features from pairs with r > .95 to avoid multicollinearity
+def filter_highly_correlated_features(df, threshold=0.95):
+    #xxx 
 
 # manual column filtering: add feature-names to drop
 columns_to_drop = [
     "PUNCT",
     "SYM",
-    "OTHER"
+    "OTHER",
     "eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_amean",
     "eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_stddevNorm",
     "eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_percentile20.0",
@@ -113,7 +120,6 @@ columns_to_drop = [
 # drop specified columns
 df_filtered = features.drop(columns=[col for col in columns_to_drop if col in features.columns])
 print(f"dropped {len(columns_to_drop)} columns → new shape: {df_filtered.shape}")
-
 
 # save filtered feature set
 os.makedirs(os.path.dirname(output_path), exist_ok=True)

@@ -1,4 +1,16 @@
-# steps: 1) load features & scores, 2) correlation-matrix, 3) VIF, 4) forward-selection, 5) save selected features for each task-score-combination, 6) compare all selected features, 7) build general feature set
+"""
+TODO: change forward-selection code, use same model as in other code + probably remove evaluate_on_test_set
+
+steps:
+1) load features & scores
+2) correlation-matrix
+3) VIF
+4) forward-selection
+upcoming:
+5) save selected features for each task-score-combination
+6) compare all selected features
+7) build general feature set
+"""
 
 # setup
 import seaborn as sns
@@ -23,7 +35,7 @@ def load_filtered_features(
     Loads and optionally filters features for a given task.
     Returns: features_df (pd.DataFrame): filtered features DataFrame
     """
-    # Load feature file
+    # load feature file
     features_path = os.path.join(features_dir, f"{task_name}.csv")
     features = pd.read_csv(features_path)
 
@@ -44,11 +56,11 @@ def compute_correlation_matrix(X_scaled, y, task_name, target, output_dir):
 
     corr = X_with_target.corr()
 
-    # Save matrix as CSV
+    # save matrix as CSV
     csv_path = os.path.join(output_dir, f"correlation_matrix_{task_name}_{target}.csv")
     corr.to_csv(csv_path)
 
-    # Plot heatmap
+    # plot heatmap
     plt.figure(figsize=(18, 16))
     sns.heatmap(
         corr,
@@ -96,6 +108,7 @@ def forward_selection(X, y, task_name, target, output_dir, verbose=True):
     Saves selected features and returns them with a performance summary.
     """
 
+    # initialize
     remaining_features = list(X.columns)
     selected_features = []
     current_score, best_new_score = -float("inf"), -float("inf")
@@ -117,10 +130,10 @@ def forward_selection(X, y, task_name, target, output_dir, verbose=True):
                 "BIC": model.bic
             })
 
-        # Convert to DataFrame
+        # convert to DataFrame
         scores_df = pd.DataFrame(scores_with_candidates)
 
-        # Select the best candidate (based on R² adjusted)
+        # select the best feature (based on R² adjusted)
         best_candidate = scores_df.sort_values("R2_adj", ascending=False).iloc[0]
 
         if best_candidate["R2_adj"] > current_score:
@@ -135,15 +148,15 @@ def forward_selection(X, y, task_name, target, output_dir, verbose=True):
                 print("No improvement. Stopping.")
             break
 
-    # Convert to DataFrame
+    # convert to DataFrame
     summary_df = pd.DataFrame(summary)
 
-    # Save selected features
+    # save selected features
     os.makedirs(output_dir, exist_ok=True)
     filename = f"selected_features_{task_name}_{target}.csv"
     summary_df.to_csv(os.path.join(output_dir, filename), index=False)
 
-    # Final model with selected features
+    # final model with selected features
     X_final = sm.add_constant(X[selected_features].reset_index(drop=True))
     y_final = y.reset_index(drop=True)
     final_model = sm.OLS(y_final, X_final).fit()
