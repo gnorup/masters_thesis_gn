@@ -1,23 +1,28 @@
 import sys
-# add the root of the project (where src/ lives) to the path
+
+# add the root of the project to the path
 sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 import os
 import pandas as pd
 
 from feature_extraction.features import (
-    n_words, clean_text, pos_ratios_spacy, filler_word_ratio,
-    ttr, mattr, concreteness_score, aoa_average, average_word_length,
+    n_words, clean_text, tokenize, pos_ratios_spacy, filler_word_ratio,
+    ttr, mattr, avg_word_length,
+    light_verb_ratio, empty_word_ratio, nid_ratio, adjacent_repetitions,
     brunets_index, honores_statistic, guirauds_statistic
 )
 
 from feature_extraction.audio import (
-    speech_rate, speech_tempo, acoustic_features,
+    count_phonemes, extract_acoustic_features,
     extract_egemaps, VoiceActivityDetector
 )
 
-from feature_extraction.features.concreteness import load_concreteness_lexicon
-from feature_extraction.features.aoa_average import load_aoa_lexicon
+from feature_extraction.features.psycholinguistic_features import (
+    compute_avg_by_pos, load_aoa_lexicon, load_imageabilitiy_norms,
+    load_familiarity_norms, load_frequency_norms, load_concreteness_lexicon
+)
+from feature_extraction.features.fluency_features import filled_pause_ratio, calculate_fluency_features
 
 from config.constants import DATA_DIRECTORY
 from config.constants import GIT_DIRECTORY
@@ -59,6 +64,10 @@ def process_features(task):
     # load concreteness and AoA lexicons once
     concreteness_lexicon = load_concreteness_lexicon()
     aoa_lexicon = load_aoa_lexicon()
+    frequency_lexicon = load_frequency_norms()
+    familiarity_lexicon = load_familiarity_norms()
+    imageability_lexicon = load_imageabilitiy_norms()
+
 
     output_file = os.path.join(output_dir, f"{task}.csv")
     feature_data = []
@@ -79,10 +88,7 @@ def process_features(task):
         text = load_transcription(subject_folder, task)
         audio_file_path = load_audio_file(subject_folder, task)
 
-        text_features = {
-            "n_words": None, "ttr": None, "filler_word_ratio": None,
-            "concreteness_score": None, "aoa_average": None
-        }
+        text_features = {}
         pos_ratios = {}
         acoustic = {}
         eGeMAPS = {}
@@ -91,22 +97,49 @@ def process_features(task):
             # linguistic features
             text_features["n_words"] = n_words(text)
             text_features["ttr"] = ttr(text)
-            text_features.update(mattr_all_windows(text, window_sizes=[10, 20, 30, 40, 50]))
+            text_features.update(mattr(text, window_sizes=[10, 20, 30, 40, 50]))
             text_features["filler_word_ratio"] = filler_word_ratio(text)
-            text_features["concreteness_score"] = concreteness_score(text, concreteness_lexicon)
-            text_features["aoa_average"] = aoa_average(text, aoa_lexicon)
-            text_features["average_word_length"] = average_word_length(text)
+            text_features["average_word_length"] = avg_word_length(text)
             text_features["brunets_index"] = brunets_index(text)
             text_features["honores_statistic"] = honores_statistic(text)
             text_features["guirauds_statistic"] = guirauds_statistic(text)
+            text_features["light_verb_ratio"] = light_verb_ratio(text)
+            text_features["empty_word_ratio"] = empty_word_ratio(text)
+            text_features["nid_ratio"] = nid_ratio(text)
+            text_features["adjacent_repetitions"] = adjacent_repetitions(text)
+
+            #AoA
+            text_features["aoa_content"] = compute_avg_by_pos(text, aoa_lexicon, pos_tags=["NOUN", "VERB", "ADJ"])
+            text_features["aoa_nouns"] = compute_avg_by_pos(text, aoa_lexicon, pos_tags=["NOUN"])
+            text_features["aoa_verbs"] = compute_avg_by_pos(text, aoa_lexicon, pos_tags=["VERB"])
+
+            # familiarity
+            text_features["fam_content"] = compute_avg_by_pos(text, familiarity_lexicon, pos_tags=["NOUN", "VERB", "ADJ"])
+            text_features["fam_nouns"] = compute_avg_by_pos(text, familiarity_lexicon, pos_tags=["NOUN"])
+            text_features["fam_verbs"] = compute_avg_by_pos(text, familiarity_lexicon, pos_tags=["VERB"])
+
+            # imageability
+            text_features["img_content"] = compute_avg_by_pos(text, imageability_lexicon, pos_tags=["NOUN", "VERB", "ADJ"])
+            text_features["img_nouns"] = compute_avg_by_pos(text, imageability_lexicon, pos_tags=["NOUN"])
+            text_features["img_verbs"] = compute_avg_by_pos(text, imageability_lexicon, pos_tags=["VERB"])
+
+            # frequency
+            text_features["freq_content"] = compute_avg_by_pos(text, frequency_lexicon, pos_tags=["NOUN", "VERB", "ADJ"])
+            text_features["freq_nouns"] = compute_avg_by_pos(text, frequency_lexicon, pos_tags=["NOUN"])
+            text_features["freq_verbs"] = compute_avg_by_pos(text, frequency_lexicon, pos_tags=["VERB"])
+
+            # concreteness
+            text_features["concr_content"] = compute_avg_by_pos(text, concreteness_lexicon,pos_tags=["NOUN", "VERB", "ADJ"])
+            text_features["concr_nouns"] = compute_avg_by_pos(text, concreteness_lexicon, pos_tags=["NOUN"])
+            text_features["concr_verbs"] = compute_avg_by_pos(text, concreteness_lexicon, pos_tags=["VERB"])
 
             pos_ratios = pos_ratios_spacy(text)
 
-            if total_duration:
-                acoustic["speech_rate"] = speech_rate(text, total_duration)
+            fluency_features = calculate_fluency_features(text)
+            text_features.update(fluency_features)
 
         if audio_file_path and total_duration:
-            acoustic.update(acoustic_features(audio_file_path, text, total_duration))
+            acoustic = extract_acoustic_features(audio_file_path, text, total_duration)
             eGeMAPS = extract_egemaps(audio_file_path)
 
         # only include subjects where at least one feature was extracted
@@ -136,7 +169,7 @@ def process_features(task):
 
 
 if __name__ == "__main__":
-    task_name = "cookieTheft"
+    task_name = "picnicScene"
     print(f"\nprocessing all subjects for task: {task_name}...\n")
     process_features(task_name)
     print("\nfeature extraction complete")

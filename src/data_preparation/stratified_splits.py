@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
 """
-Create stratified splits for 5-fold cross-validation. Split data once and save to csv-file.
+Create stratified splits for 5-fold cross-validation -> split data once and save to csv-file.
 """
 
 def create_stratification_group(df):
@@ -69,11 +69,10 @@ def create_stratification_group(df):
 
     return df
 
-def create_and_save_stratified_folds(features_path, demographics_path, id_column, output_path, n_splits=5):
-    # load and merge features and demographics
-    features = pd.read_csv(features_path)
+def create_and_save_stratified_folds(demographics_path, output_path, n_splits=5):
+    # load demographics
     demographics = pd.read_csv(demographics_path)
-    df = pd.merge(features[[id_column]], demographics, on=id_column)
+    df = demographics.copy()
 
     # create stratification group and clean
     df = create_stratification_group(df)
@@ -89,9 +88,7 @@ def create_and_save_stratified_folds(features_path, demographics_path, id_column
     print(f"Saved folds to: {output_path}")
 
 def load_fold_split(df, fold):
-    """
-    Returns train and test split for a given fold index.
-    """
+    # return train and test split for fold index
     train_df = df[df["fold"] != fold].reset_index(drop=True) # filters data to include rows not equal to current fold (train-set)
     test_df = df[df["fold"] == fold].reset_index(drop=True) # filters data to include rows with current fold (test-set)
     return train_df, test_df

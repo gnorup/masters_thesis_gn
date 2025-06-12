@@ -12,13 +12,12 @@ sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/
 from config.constants import GIT_DIRECTORY
 from regression.regression_functions import save_regression_outputs, stratified_cross_validation
 
-# load features and scores
+# load features and target score
 task_name = "cookieTheft"
 target = "PhonemicFluencyScore"
 
-# load features and target
 features = pd.read_csv(os.path.join(GIT_DIRECTORY, f"results/features/filtered/{task_name}_filtered.csv"))
-scores = pd.read_csv(os.path.join(GIT_DIRECTORY, "resources/language_scores_all_subjects.csv"))
+scores = pd.read_csv(os.path.join(GIT_DIRECTORY, "data/language_scores_all_subjects.csv"))
 
 df = pd.merge(features, scores[["Subject_ID", target]], on="Subject_ID").dropna()
 

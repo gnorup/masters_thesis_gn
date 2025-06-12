@@ -1,13 +1,11 @@
-# sources for features: Hamrick et al., 2023, Vermeer, 2000
+# sources for features:
+# Brunét's Index: Hamrick et al. (2023); Fraser et al. (2014); Huang et al. (2024)
+# Honoré Statistic: Hamrick et al. (2023); Fraser et al. (2014); Huang et al. (2024)
+# Guiraud's Statistic: Vermeer (2000)
 
 import numpy as np
 
-from .n_words import clean_text
-
-
-def tokenize(text):
-    cleaned = clean_text(text)
-    return cleaned.split()
+from feature_extraction.features import tokenize
 
 
 def brunets_index(text):
@@ -17,7 +15,7 @@ def brunets_index(text):
     if n_tokens > 0:
         return n_tokens ** (n_types ** (-0.165))
     else:
-        return 0
+        return None
 
 def honores_statistic(text):
     words = tokenize(text)
@@ -25,10 +23,12 @@ def honores_statistic(text):
     n_types = len(set(words))
     n_words_with_one_occurrence = len([w for w in set(words) if words.count(w) == 1])
 
-    if n_words == 0 or n_types == 0 or (1 - n_words_with_one_occurrence / n_types) == 0:
-        return 0
+    denominator = (1 - n_words_with_one_occurrence / n_types) if n_types != 0 else None
+
+    if n_words == 0 or denominator == 0 or denominator is None:
+        return None
     else:
-        return (100 * np.log(n_words)) / (1 - n_words_with_one_occurrence / n_types)
+        return (100 * np.log(n_words)) / denominator
 
 def guirauds_statistic(text):
     words = tokenize(text)
@@ -37,4 +37,4 @@ def guirauds_statistic(text):
     if n_tokens > 0:
         return n_types / np.sqrt(n_tokens)
     else:
-        return 0
+        return None

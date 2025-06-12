@@ -1,4 +1,5 @@
 # feature idea: Haider et al. (2020)
+# includes Fundamental Frequency F0 (Shankar et al., 2025)
 
 import opensmile
 
@@ -9,7 +10,6 @@ smile = opensmile.Smile(
 )
 
 def extract_egemaps(audio_path):
-    """Extracts eGeMAPS features as a dictionary with names and values."""
     df = smile.process_file(audio_path)
 
     # get the first (and only) row as a dictionary

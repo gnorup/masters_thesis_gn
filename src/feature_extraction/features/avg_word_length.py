@@ -1,10 +1,10 @@
-# source: Fraser et al., 2016
+# source: Fraser et al. (2016); Robin et al. (2023)
 
-from .lexical_diversity_features import tokenize
+from feature_extraction.features import tokenize
 
-def average_word_length(text):
+def avg_word_length(text):
     words = tokenize(text)
     if not words:
-        return 0
+        return None
     total_length = sum(len(w) for w in words)
     return total_length / len(words)
