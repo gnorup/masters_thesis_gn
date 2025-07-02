@@ -13,16 +13,16 @@ from feature_extraction.features import (
     brunets_index, honores_statistic, guirauds_statistic
 )
 
+from feature_extraction.features.psycholinguistic_features import (
+    compute_avg_by_pos, load_aoa_lexicon, load_imageability_norms,
+    load_familiarity_norms, load_frequency_norms, load_concreteness_lexicon
+)
+from feature_extraction.features.fluency_features import filled_pause_ratio, calculate_fluency_features
+
 from feature_extraction.audio import (
     count_phonemes, extract_acoustic_features,
     extract_egemaps, VoiceActivityDetector
 )
-
-from feature_extraction.features.psycholinguistic_features import (
-    compute_avg_by_pos, load_aoa_lexicon, load_imageabilitiy_norms,
-    load_familiarity_norms, load_frequency_norms, load_concreteness_lexicon
-)
-from feature_extraction.features.fluency_features import filled_pause_ratio, calculate_fluency_features
 
 from config.constants import DATA_DIRECTORY
 from config.constants import GIT_DIRECTORY
@@ -66,7 +66,7 @@ def process_features(task):
     aoa_lexicon = load_aoa_lexicon()
     frequency_lexicon = load_frequency_norms()
     familiarity_lexicon = load_familiarity_norms()
-    imageability_lexicon = load_imageabilitiy_norms()
+    imageability_lexicon = load_imageability_norms()
 
 
     output_file = os.path.join(output_dir, f"{task}.csv")

@@ -36,7 +36,7 @@ def load_aoa_lexicon():
     df = pd.read_excel(path) # load AoA lexicon
     return dict(zip(df["Word"].str.lower(), df["Rating.Mean"])) # creates dictionary for words and their average AoA rating
 
-def load_imageabilitiy_norms():
+def load_imageability_norms():
     path = os.path.join(GIT_DIRECTORY, "resources/StadthagenDavis2006BristolNorms.txt")
     df = pd.read_csv(path, delimiter="\t")
     return dict(zip(df["WORD"].str.lower(), df["IMG"]))

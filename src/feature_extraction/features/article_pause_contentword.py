@@ -1,31 +1,71 @@
-# number of pauses that follow an article and precede content words (feature idea: Vincze et al., 2022 -> might indicate word-finding difficulties)
-# pause definition consistent with other features: Fraser et al. (2014)
-
 import pandas as pd
 import spacy
+from spacy.tokens import Doc
 
 nlp = spacy.load("en_core_web_sm")
 
-def pause_after_article(word_timestamp_file, pause=0.15):
+def article_pause_contentword(word_timestamp_file, pause_threshold=0.15):
     df = pd.read_csv(word_timestamp_file)
 
-    full_text = " ".join(df["word"].tolist()) # combine words for POS tagging
-    doc = nlp(full_text)
-    df["pos"] = [token.pos_ for token in doc] # new column with POS tags
+    # pos-tagging on entire transcription
+    tokens = df["word"].astype(str).tolist()
+    doc = Doc(nlp.vocab, words=tokens)
+    for name, proc in nlp.pipeline:
+        doc = proc(doc)
+    tags = [token.tag_ for token in doc]
 
-    article = {"DET"}
-    content_words = {"NOUN", "VERB", "ADJ"}
+    # add pos-column
+    if len(tags) != len(df):
+        print(f"mismatch: {len(tags)} tags vs {len(df)} words -> check")
+        return None
+
+    df["pos"] = tags
+
+    # add pos-row "PAUSE" where duration between words > threshold
+    pause_rows = []
+    for i in range(1, len(df)):
+        pause = df.loc[i, "start"] - df.loc[i - 1, "end"]
+        if pause > pause_threshold:
+            pause_row = {
+                "word": "[pause]",
+                "start": df.loc[i - 1, "end"],
+                "end": df.loc[i, "start"],
+                "pos": "PAUSE"
+            }
+            pause_rows.append((i, pause_row))
+
+    if pause_rows:
+        for idx, pause_row in reversed(pause_rows):
+            df = pd.concat([df.iloc[:idx], pd.DataFrame([pause_row]), df.iloc[idx:]], ignore_index=True)
+
+    # define pos_categories
+    def categorize(tag):
+        if tag in {"UH", "PAUSE"}:
+            return "PAUSE"
+        elif tag in {"DT"}:
+            return "ARTICLE"
+        elif tag in {"NN", "NNS", "NNP", "NNPS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ", "JJ", "JJR", "JJS"}:
+            return "CONTENT"
+        else:
+            return "OTHER"
+
+    df["pos_category"] = df["pos"].apply(categorize)
+
+    # count patterns
+    sequence = df["pos_category"].tolist()
+    patterns = [
+        ["ARTICLE", "PAUSE", "CONTENT"],
+        ["ARTICLE", "PAUSE", "PAUSE", "CONTENT"],
+        ["ARTICLE", "PAUSE", "PAUSE", "PAUSE", "CONTENT"],
+        ["ARTICLE", "PAUSE", "ARTICLE", "CONTENT"],
+        ["ARTICLE", "PAUSE", "ARTICLE", "PAUSE", "CONTENT"]
+    ]
 
     article_pause_count = 0
-
-    for i in range(len(df)-1):
-        # go through consecutive words (to find cases where article -> content-word)
-        current_word = df.loc[i, "pos"]
-        next_word = df.loc[i+1, "pos"]
-        # check if silence between words meets pause-criteria (start of next - end of current)
-        pause_duration = df.loc[i+1, "start"] - df.loc[i, "end"]
-        # check if pause is after article and before content-word -> count those occurrences
-        if current_word in article and pause_duration > pause and next_word in content_words:
-            article_pause_count += 1
+    for i in range(len(sequence)):
+        for pattern in patterns:
+            if sequence[i:i + len(pattern)] == pattern:
+                article_pause_count += 1
+                break
 
     return article_pause_count

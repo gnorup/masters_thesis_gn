@@ -1,0 +1,17 @@
+feature_1,feature_2,correlation
+mattr_30,mattr_20,0.9583
+mattr_40,mattr_30,0.9778
+mattr_50,mattr_40,0.9868
+brunets_index,ttr,-0.9577
+INTJ,filler_word_ratio,0.9584
+total_speech_duration,n_words,0.9575
+speech_rate_words,speech_rate_phonemes,0.9637
+long_pause_count,n_pauses,0.9736
+pause_ratio,phonation_rate,-1.0
+eGeMAPS_loudness_sma3_percentile80.0,eGeMAPS_loudness_sma3_amean,0.9646
+eGeMAPS_loudness_sma3_pctlrange0-2,eGeMAPS_loudness_sma3_percentile80.0,0.9762
+eGeMAPS_F2amplitudeLogRelF0_sma3nz_amean,eGeMAPS_F1amplitudeLogRelF0_sma3nz_amean,0.9816
+eGeMAPS_F3amplitudeLogRelF0_sma3nz_amean,eGeMAPS_F1amplitudeLogRelF0_sma3nz_amean,0.971
+eGeMAPS_F3amplitudeLogRelF0_sma3nz_amean,eGeMAPS_F2amplitudeLogRelF0_sma3nz_amean,0.9951
+eGeMAPS_F3amplitudeLogRelF0_sma3nz_stddevNorm,eGeMAPS_F2amplitudeLogRelF0_sma3nz_stddevNorm,0.97
+eGeMAPS_StddevVoicedSegmentLengthSec,eGeMAPS_MeanVoicedSegmentLengthSec,0.9757

@@ -1,8 +1,0 @@
-Regression Assumption Checks
-==============================
-Durbin-Watson Statistic: 2.1236
-
-See generated plots for:
- - Residuals vs. Fitted
- - Histogram of Residuals
- - Q-Q Plot

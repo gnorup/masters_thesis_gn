@@ -69,7 +69,7 @@ def pos_ratios_spacy(text):
         "DET/NOUN": determiner_noun_ratio,
         "AUX/VERB": aux_verb_ratio,
         "OPEN/CLOSED": open_closed_ratio,
-        "INFORMATION_WORDS": information_words_ratio
+        "information_words": information_words_ratio
     })
 
     return pos_ratios

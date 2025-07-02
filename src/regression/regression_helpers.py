@@ -2,9 +2,11 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.ensemble import RandomForestRegressor
 
 def stratified_cross_validation(
-        df, fold_column, model_class, model_params, target_column, n_folds=5, feature_columns=None, model_name=""
+        df, fold_column, model_type, model_params, target_column, n_folds=5, feature_columns=None
 ):
     r2_scores = []
     rmse_scores = []
@@ -27,7 +29,7 @@ def stratified_cross_validation(
         X_test_scaled = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns, index=X_test.index)
 
         # train model
-        model = model_class(**model_params) if model_params else model_class()
+        model = model_type(**model_params) if model_params else model_type()
         model.fit(X_train_scaled, y_train)
         y_pred = model.predict(X_test_scaled)
 
@@ -45,7 +47,7 @@ def stratified_cross_validation(
             "y_test": y_test.values,
             "y_pred": y_pred,
             "fold": fold,
-            "model": model_name
+            "model": model_type.__name__
         })
         all_preds.append(fold_df)
 

@@ -1,7 +1,7 @@
 # acoustic features:
 
 # phonation rate: total duration of speech to total duration of the sample (including pauses) (Fraser et al., 2014)
-# total duration of speech:  total length of all non-silent segments(Fraser et al., 2014; Tóth et al., 2017)
+# total duration of speech: total length of all non-silent segments (Fraser et al., 2014; Tóth et al., 2017)
 # speech rate phonemes: the number of total phonemes uttered, divided by the total duration of the utterance (Tóth et al., 2017; Huang et al., 2024; Gosztolya et al., 2019)
 # speech rate words: the number of words divided by the duration of the speech sample (Wilson et al., 2010; Slegers et al., 2018)
 # number of pauses: total number of pause occurrences (Tóth et al., 2017; Petti et al., 2020, but Fraser et al. (2014) pause length: 0.15 s)

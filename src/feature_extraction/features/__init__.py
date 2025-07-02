@@ -16,6 +16,7 @@ from .nid_ratio import nid_ratio
 from .repetitiveness import adjacent_repetitions
 from .fluency_features import calculate_fluency_features, filled_pause_ratio
 from .psycholinguistic_features import (
-    load_aoa_lexicon, load_frequency_norms, load_familiarity_norms, load_imageabilitiy_norms, load_concreteness_lexicon,
+    load_aoa_lexicon, load_frequency_norms, load_familiarity_norms, load_imageability_norms, load_concreteness_lexicon,
     compute_avg_by_pos
 )
+from .article_pause_contentword import article_pause_contentword

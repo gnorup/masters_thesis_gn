@@ -9,7 +9,7 @@ from data_preparation.stratified_splits import create_and_save_stratified_folds
 
 # set file paths
 demographics_path = os.path.join(GIT_DIRECTORY, "data/demographics_data.csv")
-output_path = os.path.join(GIT_DIRECTORY, "data", "cookieTheft_stratified_folds.csv")
+output_path = os.path.join(GIT_DIRECTORY, "data", "stratified_folds.csv")
 
 # generate and save stratified folds
 create_and_save_stratified_folds(
