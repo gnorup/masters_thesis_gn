@@ -9,7 +9,7 @@ from matplotlib.lines import Line2D
 from sklearn.metrics import r2_score
 
 def format_title(name):
-    name = re.sub(r'(?<!^)(?=[A-Z])', ' ', name)  # insert space before capitals'
+    name = re.sub(r'(?<!^)(?=[A-Z])', ' ', name)  # insert space before capitals
     return name.title().strip()
 
 def save_crossval_results(

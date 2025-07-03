@@ -1,3 +1,5 @@
+# number of pauses that follow an article and precede content words (Vincze et al., 2022)
+
 import pandas as pd
 import spacy
 from spacy.tokens import Doc
