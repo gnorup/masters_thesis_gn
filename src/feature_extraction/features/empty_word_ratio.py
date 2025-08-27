@@ -2,7 +2,7 @@
 
 from feature_extraction.features import tokenize
 
-empty_words = {"thing", "place", "stuff"} # list by Hamrick et al. (2023) -> expand?
+empty_words = {"thing", "place", "stuff"} # list by Hamrick et al. (2023)
 
 def empty_word_ratio(text):
     words = tokenize(text)

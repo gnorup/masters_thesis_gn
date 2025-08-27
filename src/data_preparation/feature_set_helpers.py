@@ -144,14 +144,29 @@ def stratified_cv_feature_importance(
 ):
 
     shap_values_all = []
+    base_values_all = []
     X_test_all = []
+    shap_explanation = None
+    shap_table = None
 
     for fold in sorted(df[fold_column].unique()):
         train_df = df[df[fold_column] != fold]
         test_df = df[df[fold_column] == fold]
 
-        X_train, y_train = train_df[feature_columns], train_df[target_column]
-        X_test, y_test = test_df[feature_columns], test_df[target_column]
+        # because of error
+        X_train = train_df[feature_columns].apply(pd.to_numeric, errors="coerce")
+        X_test = test_df[feature_columns].apply(pd.to_numeric, errors="coerce")
+        y_train = train_df[target_column]
+        y_test = test_df[target_column]
+
+        tr_mask = X_train.notna().all(axis=1) & y_train.notna()
+        te_mask = X_test.notna().all(axis=1) & y_test.notna()
+        X_train, y_train = X_train.loc[tr_mask], y_train.loc[tr_mask]
+        X_test, y_test = X_test.loc[te_mask], y_test.loc[te_mask]
+
+        if X_train.empty or X_test.empty:
+            print(f"skip fold {fold}: empty after cleaning (train={len(X_train)}, test={len(X_test)})")
+            continue
 
         # train model
         model = model_type(**(model_params or {}))
@@ -161,20 +176,23 @@ def stratified_cv_feature_importance(
         try:
             explainer = shap.Explainer(model, X_train)
             shap_vals = explainer(X_test)
-            shap_values_all.append(shap_vals.values)
-            X_test_all.append(X_test)
         except Exception as e:
             print(f"SHAP failed on fold {fold}: {e}")
+            continue
+
+        shap_values_all.append(shap_vals.values)
+        base_values_all.append(np.array(shap_vals.base_values).reshape(-1))
+        X_test_all.append(X_test)
 
     # create aggregated SHAP explanation object
-    shap_explanation = None
-    if shap_values_all and X_test_all:
+    if shap_values_all:
         all_shap_values = np.vstack(shap_values_all)
-        all_X_test = pd.concat(X_test_all)
+        all_base_values = np.concatenate(base_values_all)
+        all_X_test = pd.concat(X_test_all, ignore_index=True)
         shap_explanation = shap.Explanation(
             values=all_shap_values,
-            base_values=np.mean(all_shap_values, axis=0),
-            data=all_X_test,
+            base_values=all_base_values,
+            data=all_X_test.values,
             feature_names=all_X_test.columns.tolist()
         )
 
@@ -185,5 +203,8 @@ def stratified_cv_feature_importance(
         }).sort_values("Mean_SHAP_Value", ascending=False).reset_index(drop=True)
         if save_dir and task_name:
             shap_table.to_csv(os.path.join(save_dir, f"{task_name}_{target_column}_shap_values_table.csv"), index=False)
+    else:
+        print("no SHAP values available")
 
     return shap_explanation, shap_table
+

@@ -15,12 +15,12 @@ from regression.regression_helpers import stratified_cross_validation
 from regression.evaluation_helpers import save_crossval_results
 
 # load features and target score
-task_name = "cookieTheft"
-target = "PictureNamingScore"
+task_name = "picnicScene"
+target = "SemanticFluencyScore"
 
 # select regression-model
 model_type = RandomForestRegressor
-model_params = {"n_estimators": 150}
+model_params = {"n_estimators": 200, "random_state": 42, "min_samples_leaf": 5, "max_features": "sqrt"}
 
 features = pd.read_csv(os.path.join(GIT_DIRECTORY, f"results/features/filtered/{task_name}_filtered.csv"))
 scores = pd.read_csv(os.path.join(GIT_DIRECTORY, "data/language_scores_all_subjects.csv"))
@@ -42,7 +42,7 @@ r2_list, rmse_list, mae_list, all_preds = stratified_cross_validation(
     df=df,
     fold_column="fold",
     model_type=model_type,
-    model_params=None,
+    model_params=model_params,
     target_column=target,
     feature_columns=X.columns
 )

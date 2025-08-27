@@ -4,8 +4,8 @@
 # Age of Acquisition (AoA; average age when people typically learn a word): ratings of 30'121 English words by Kuperman et al. (2012) (feature idea: Fraser et al. (2014, 2016); Forbes-McKay (2004))
 # Familiarity: combined Bristol/Gilhooly & Logie norms by Stadthagen-Gonzalez & Davis (2006)
 # Imageability (how easy a word elicits mental images): combined Bristol/Gilhooly & Logie norms by Stadthagen-Gonzalez & Davis (2006)
-# Frequency: SUBTL word frequency norms of 60'400 English words by Brysbaert & New, 2009
-# Concreteness: based on human-rated norms of abstract (1) to concrete (5) words by Brysbaert et al., 2013
+# Frequency: SUBTL word frequency norms of 60'400 English words by Brysbaert & New (2009)
+# Concreteness: based on human-rated norms of abstract (1) to concrete (5) words by Brysbaert et al. (2013) (feature idea: Mahajan & Baths, 2021)
 
 
 import os

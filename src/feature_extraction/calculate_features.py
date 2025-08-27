@@ -5,6 +5,7 @@ sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/
 
 import os
 import pandas as pd
+import wave, contextlib
 
 from feature_extraction.features import (
     n_words, clean_text, tokenize, pos_ratios_spacy, filler_word_ratio,
@@ -35,9 +36,22 @@ def load_audio_durations(subject_folder, task):
     try:
         df = pd.read_csv(duration_path) # tries to load csv
         match = df[df["task"] == task] # filters data frame to row for current task
-        return match["duration"].values[0] if not match.empty else None # if row exists -> store duration value
-    except:
+        if not match.empty:
+            return match["duration"].values[0]
+    except Exception:
+        pass
+
+    wav_path = os.path.join(subject_folder, f"{task}.wav")
+    return _infer_wav_duration_seconds(wav_path)
+
+def _infer_wav_duration_seconds(wav_path: str):
+    # in case of missing durations
+    try:
+        with contextlib.closing(wave.open(wav_path, 'r')) as w:
+            return w.getnframes() / float(w.getframerate())
+    except Exception:
         return None
+
 
 def load_transcription(subject_folder, task):
     """Returns transcription text for a given task if available, else empty string."""
