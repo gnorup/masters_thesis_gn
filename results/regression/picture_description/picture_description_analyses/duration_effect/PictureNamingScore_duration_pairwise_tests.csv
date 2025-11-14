@@ -1,0 +1,4 @@
+target,model,task_A,task_B,mean_diff,ci_low,ci_high,p_raw,p_adj,adjust,n_subjects,n_boot
+PictureNamingScore,full,picture_description_1min,picture_description,-0.05802481304111933,-0.09213149491854851,-0.025461193211692525,0.002,0.006,holm,969,1000
+PictureNamingScore,full,picture_description_2min,picture_description,-0.024392437278879575,-0.04196959283490536,-0.007999581147741245,0.006,0.012,holm,969,1000
+PictureNamingScore,full,picture_description_1min,picture_description_2min,-0.03363237576223976,-0.06495204743637163,-0.006627289276652436,0.029,0.029,holm,969,1000

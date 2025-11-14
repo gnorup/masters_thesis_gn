@@ -1,4 +1,0 @@
-Regression Evaluation (Linear Regression) for cookieTheft → SemanticFluencyScore
-R²: 0.183
-RMSE: 4.451
-MAE: 3.713

@@ -1,4 +1,0 @@
-Regression Evaluation (Linear Regression) for cookieTheft → PictureNamingScore
-R²: 0.157
-RMSE: 2.136
-MAE: 1.598

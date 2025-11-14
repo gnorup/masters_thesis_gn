@@ -1,0 +1,2 @@
+task,target,model,mean,std,low_threshold,high_threshold,n_total,n_low,n_notlow
+picnicScene,PhonemicFluencyScore,acoustic,15.239593908629441,4.632364038251928,10.607229870377513,19.87195794688137,986,144,842

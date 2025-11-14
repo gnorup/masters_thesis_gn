@@ -1,4 +1,0 @@
-Regression Evaluation (Random Forest) for cookieTheft → PictureNamingScore
-R²: 0.044
-RMSE: 2.275
-MAE: 1.650

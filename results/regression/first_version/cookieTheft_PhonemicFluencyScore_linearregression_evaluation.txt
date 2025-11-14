@@ -1,4 +1,0 @@
-Regression Evaluation (Linear Regression) for cookieTheft → PhonemicFluencyScore
-R²: -0.004
-RMSE: 4.532
-MAE: 3.591

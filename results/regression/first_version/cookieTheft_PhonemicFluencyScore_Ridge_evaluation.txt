@@ -1,4 +1,0 @@
-Regression Evaluation (Ridge Regression) for cookieTheft → PhonemicFluencyScore
-R²: 0.004
-RMSE: 4.513
-MAE: 3.580

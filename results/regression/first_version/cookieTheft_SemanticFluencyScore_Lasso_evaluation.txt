@@ -1,4 +1,0 @@
-Regression Evaluation (Lasso Regression) for cookieTheft → SemanticFluencyScore
-R²: 0.163
-RMSE: 4.505
-MAE: 3.742

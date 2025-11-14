@@ -131,6 +131,36 @@ def correlation_matrix(df, feature_cols, save_path=None, method="pearson", figsi
     return corr
 
 
+# impute mean of feature for given subject and task
+def impute_mean(task_name: str, feature_name: str, subject_id: int) -> None:
+
+    # path to task csv
+    file_path = os.path.join(
+        GIT_DIRECTORY, "results", "features", "filtered", f"{task_name}_filtered.csv"
+    )
+
+    # load dataset
+    df = pd.read_csv(file_path)
+
+    # check if subject exists
+    if subject_id not in df["Subject_ID"].values:
+        raise ValueError(f"Subject {subject_id} not found in {task_name}_filtered.csv")
+
+    # compute mean (ignoring NaNs -> there shouldn't be any, but just in case)
+    feature_mean = df[feature_name].mean(skipna=True)
+
+    # check if we actually need to impute
+    if pd.isna(df.loc[df["Subject_ID"] == subject_id, feature_name].values[0]):
+        df.loc[df["Subject_ID"] == subject_id, feature_name] = feature_mean
+        print(f"Imputed {feature_name} for Subject {subject_id} with mean={feature_mean:.4f}")
+    else:
+        print(f"No imputation needed, {feature_name} already has a value for Subject {subject_id}")
+
+    # save back to same file
+    df.to_csv(file_path, index=False)
+    print(f"File updated: {file_path}")
+
+
 # feature-importance
 def stratified_cv_feature_importance(
     df,

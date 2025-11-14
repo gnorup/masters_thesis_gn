@@ -1,4 +1,0 @@
-Regression Evaluation (Ridge Regression) for cookieTheft → SemanticFluencyScore
-R²: 0.187
-RMSE: 4.440
-MAE: 3.703

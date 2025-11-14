@@ -1,4 +1,0 @@
-Regression Evaluation (Random Forest) for cookieTheft → SemanticFluencyScore
-R²: 0.172
-RMSE: 4.481
-MAE: 3.760

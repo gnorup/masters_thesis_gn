@@ -1,4 +1,0 @@
-Regression Evaluation (Ridge Regression) for cookieTheft → PictureNamingScore
-R²: 0.180
-RMSE: 2.106
-MAE: 1.582

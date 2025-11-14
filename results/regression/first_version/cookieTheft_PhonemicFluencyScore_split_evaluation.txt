@@ -1,4 +1,0 @@
-Train/Test Split Evaluation for cookieTheft → PhonemicFluencyScore
-R²: -0.088
-RMSE: 4.868
-MAE: 3.880

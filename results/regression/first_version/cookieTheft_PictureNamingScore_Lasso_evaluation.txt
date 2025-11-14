@@ -1,4 +1,0 @@
-Regression Evaluation (Lasso Regression) for cookieTheft → PictureNamingScore
-R²: 0.128
-RMSE: 2.172
-MAE: 1.648
