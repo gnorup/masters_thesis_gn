@@ -30,7 +30,7 @@ Chair: Methods of Plasticity Research, University of Zurich
   - `src/regression`: Main regression analyses and post analyses for Random Forest regression 
   - `run_all_analyses.py`: Main pipeline script; run all selected analysis steps 
 
-*note that Random Forest regression results are based on hyperparameters tuned on an earlier version of the cleaned feature set (see `src/additional_analyses/notebooks/first_regression_hyperparameter_tuning.ipynb`) and re-tuning might slightly alter the results. 
+*note that Random Forest regression results are based on hyperparameters tuned on an earlier version of the cleaned feature set (see `src/additional_analyses/first_regression_hyperparameter_tuning.ipynb`) and re-tuning might slightly alter the results. 
 
 ## Data
 The project uses data from the _Language Healthy Aging_ dataset collected by Heitz et al. (2025). 
