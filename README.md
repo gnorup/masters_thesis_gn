@@ -16,7 +16,7 @@ Chair: Methods of Plasticity Research, University of Zurich
   - `results/data_preparation`: Details on data cleaning process 
   - `results/dataset`: Descriptives, distributions 
   - `results/features`: Raw extracted features and cleaned feature sets for analyses
-  - `results/regression`: Regression results for Random Forest and multiple linear regression, including performance metrics, comparisons of scores, tasks and models
+  - `results/regression`: Regression results for Random Forest* and multiple linear regression, including performance metrics, comparisons of scores, tasks and models
   - `results/regression/random_forest/`: Post-Analyses for Random Forest regression
     - `bias`: Predictive performance across demographic subgroups
     - `feature_importance`: SHAP values for all scores and tasks
@@ -29,6 +29,8 @@ Chair: Methods of Plasticity Research, University of Zurich
   - `src/feature_extraction`: Feature extraction, linguistic and acoustic features 
   - `src/regression`: Main regression analyses and post analyses for Random Forest regression 
   - `run_all_analyses.py`: Main pipeline script; run all selected analysis steps 
+
+*note that Random Forest regression results are based on hyperparameters tuned on an earlier version of the cleaned feature set (see `src/additional_analyses/notebooks/first_regression_hyperparameter_tuning.ipynb`) and re-tuning might slightly alter the results. 
 
 ## Data
 The project uses data from the _Language Healthy Aging_ dataset collected by Heitz et al. (2025). 
