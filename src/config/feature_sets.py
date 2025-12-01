@@ -3,20 +3,18 @@
 def get_linguistic_features():
     return {
     "n_words","ttr","mattr_10","mattr_20","mattr_30","mattr_40","mattr_50","filler_word_ratio",
-    "average_word_length","brunets_index","honores_statistic","guirauds_statistic","light_verb_ratio",
+    "avg_word_length","brunets_index","honores_statistic","guirauds_statistic","light_verb_ratio",
     "empty_word_ratio","nid_ratio","adjacent_repetitions","aoa_content","aoa_nouns","aoa_verbs",
-    "fam_content","fam_nouns","fam_verbs","img_content","img_nouns","img_verbs","freq_content",
-    "freq_nouns","freq_verbs","concr_content","concr_nouns","concr_verbs","um_ratio","uh_ratio",
-    "er_ratio","ah_ratio","ADJ","ADP","ADV","AUX","CCONJ","DET","INTJ","NOUN","NUM","PART",
-    "PRON","PROPN","SCONJ","VERB","OTHER","NOUN/VERB","PRON/NOUN","DET/NOUN","AUX/VERB",
-    "OPEN/CLOSED","information_words","article_pause_contentword"
+    "freq_content", "freq_nouns","freq_verbs","concr_content","concr_nouns","concr_verbs","um_ratio","uh_ratio",
+    "er_ratio","ah_ratio","ADJ","ADP","ADV","AUX","CCONJ","DET","INTJ","NOUN","NUM","PART", "PRON","PROPN",
+    "SCONJ","VERB","OTHER","noun_verb_ratio","pronoun_noun_ratio","determiner_noun_ratio","aux_verb_ratio",
+    "content_density","information_words_ratio","article_pause_contentword"
     }
 
 def get_acoustic_features():
     return {
         "phonation_rate","total_speech_duration","speech_rate_phonemes","speech_rate_words","n_pauses",
-        "total_pause_duration","avg_pause_duration","short_pause_count","long_pause_count","pause_word_ratio",
-        "pause_ratio","pause_rate",
+        "total_pause_duration","avg_pause_duration","long_pause_count","pause_word_ratio", "pause_ratio","pause_rate",
         "eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_amean","eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_stddevNorm",
         "eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_percentile20.0","eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_percentile50.0",
         "eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_percentile80.0","eGeMAPS_F0semitoneFrom27.5Hz_sma3nz_pctlrange0-2",
@@ -63,3 +61,6 @@ def get_acoustic_features():
 
 def get_all_language_features():
     return get_linguistic_features() | get_acoustic_features()
+
+def get_demographic_features():
+    return ["Age", "Gender", "Education_level", "Country", "Socioeconomic"]

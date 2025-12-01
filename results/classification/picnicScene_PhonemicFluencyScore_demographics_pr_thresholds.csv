@@ -1,3 +1,0 @@
-task,target,model,criterion,best_threshold,precision,recall,f1,threshold
-picnicScene,PhonemicFluencyScore,demographics,max_f1,0.16441048696822325,0.16317991631799164,0.8125,0.27177700348432055,
-picnicScene,PhonemicFluencyScore,demographics,recall>=0.80,,0.1631504922644163,0.8055555555555556,,0.16698301400883517

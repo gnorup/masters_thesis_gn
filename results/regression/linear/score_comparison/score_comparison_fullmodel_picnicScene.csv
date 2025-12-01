@@ -1,0 +1,4 @@
+task,model,A,B,mean_diff,ci_low,ci_high,p_raw,p_adj,n_subjects
+picnicScene,full,SemanticFluencyScore,PhonemicFluencyScore,0.17739334972740048,0.09268118704046359,0.26312006013348177,0.0,0.0,969
+picnicScene,full,PictureNamingScore,PhonemicFluencyScore,0.21548334888953827,0.08791390835148846,0.3369981560220532,0.002,0.004,959
+picnicScene,full,PictureNamingScore,SemanticFluencyScore,0.03977774453170662,-0.1310863092422114,0.19388904123021133,0.589,0.589,958

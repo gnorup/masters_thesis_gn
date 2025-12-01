@@ -1,4 +1,0 @@
-target,model,task_A,task_B,mean_diff,ci_low,ci_high,p_raw,p_adj,adjust,n_subjects,n_boot
-SemanticFluencyScore,full,picture_description_1min,picture_description_2min,-0.03660590788354066,-0.05789516670437469,-0.015076754198217626,0.001,0.003,holm,981,1000
-SemanticFluencyScore,full,picture_description_1min,picture_description,-0.0389023924963181,-0.06136347913848909,-0.01493501808064328,0.001,0.003,holm,981,1000
-SemanticFluencyScore,full,picture_description_2min,picture_description,-0.002296484612777439,-0.0174623097474485,0.012245567313197196,0.765,0.765,holm,981,1000

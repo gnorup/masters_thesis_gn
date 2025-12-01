@@ -1,16 +1,14 @@
-import os
+# create stratified splits based on demographics
+
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
-"""
-Create stratified splits for 5-fold cross-validation -> split data once and save to csv-file.
-"""
-
+# create demographic-based stratification groups
 def create_stratification_group(df):
     df = df.copy()
 
-    # age - 3 groups: <65, 65-75, >75 (based on Maercker, 2015; UN)
+    # age - 3 groups: <65, 65-75, >75 (based on Maercker, 2015)
     df["age_group"] = pd.cut(
         df["Age"],
         bins=[0, 64, 75, np.inf],
@@ -18,13 +16,13 @@ def create_stratification_group(df):
     )
 
     # education - 3 groups (based on ISCED; eurostat)
-    def map_education(edu):
-        edu = str(edu).lower()
-        if "less_than_highschool" in edu:
+    def map_education(education):
+        education = str(education).lower()
+        if "less_than_highschool" in education:
             return "low"
-        elif "high_school" in edu or "vocational" in edu:
+        elif "high_school" in education or "vocational" in education:
             return "medium"
-        elif "bachelor" in edu or "master" in edu or "phd" in edu:
+        elif "bachelor" in education or "master" in education or "phd" in education:
             return "high"
         else:
             return "unknown"
@@ -69,6 +67,7 @@ def create_stratification_group(df):
 
     return df
 
+# create stratified K folds and save them to csv
 def create_and_save_stratified_folds(demographics_path, output_path, n_splits=5):
     # load demographics
     demographics = pd.read_csv(demographics_path)
@@ -78,18 +77,23 @@ def create_and_save_stratified_folds(demographics_path, output_path, n_splits=5)
     df = create_stratification_group(df)
 
     # assign folds
-    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42) # shuffles data before splitting, then creates splits for stratified cross-validation
-    df["fold"] = -1 # new column: fold, -1 as placeholder
-    for fold_idx, (_, test_idx) in enumerate(skf.split(df, df["strat_group"])): # splits based on distribution of values in strat_group
-        df.loc[test_idx, "fold"] = fold_idx + 1 # folds labeled 1 to 5
+    skf = StratifiedKFold(
+        n_splits=n_splits,
+        shuffle=True,
+        random_state=42
+    )
+    df["fold"] = -1 # placeholder
+    # splits based on distribution of values in strat_group
+    for fold_idx, (_, test_idx) in enumerate(skf.split(df, df["strat_group"])):
+        df.loc[test_idx, "fold"] = fold_idx + 1 # folds labeled 1 to n
 
     # save
     df.to_csv(output_path, index=False)
-    print(f"Saved folds to: {output_path}")
+    print(f"saved folds to: {output_path}")
 
-def load_fold_split(df, fold):
-    # return train and test split for fold index
-    train_df = df[df["fold"] != fold].reset_index(drop=True) # filters data to include rows not equal to current fold (train-set)
-    test_df = df[df["fold"] == fold].reset_index(drop=True) # filters data to include rows with current fold (test-set)
+# split dataframe into train and test sets based on folds
+def get_train_test_for_fold(df, fold):
+    train_df = df[df["fold"] != fold].reset_index(drop=True) # rows not equal to current fold (train-set)
+    test_df = df[df["fold"] == fold].reset_index(drop=True) # rows with current fold (test-set)
+
     return train_df, test_df
-

@@ -1,2 +1,0 @@
-task,target,model,mean,std,low_threshold,high_threshold,n_total,n_low,n_notlow
-picnicScene,PictureNamingScore,linguistic,17.408016443987666,2.733163475551994,14.674852968435673,20.14117991953966,986,110,876

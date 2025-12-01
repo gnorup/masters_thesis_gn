@@ -1,0 +1,4 @@
+target,model,task_A,task_B,mean_diff,ci_low,ci_high,p_raw,p_adj,n_subjects
+PictureNamingScore,full,picture_description_1min,picture_description,-0.05550446238129152,-0.08971449453612587,-0.02096943950706494,0.001,0.003,976
+PictureNamingScore,full,picture_description_1min,picture_description_2min,-0.03469437282364754,-0.06359176534084617,-0.0032289780977633265,0.02,0.028,976
+PictureNamingScore,full,picture_description_2min,picture_description,-0.02081008955764397,-0.03609561540864605,-0.004267630564874018,0.014,0.028,976

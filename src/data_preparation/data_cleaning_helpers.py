@@ -1,14 +1,6 @@
-import os
-import sys
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
-
-from config.constants import GIT_DIRECTORY
 
 ### 1) filter for people with missing tasks (when n_words < 15)
 
@@ -74,7 +66,7 @@ def filter_features_by_missing_zero(df, missing_table, threshold=20.0):
 
 ### 4) remove features that have more than 10% outliers (defined by IQR)
 
-def identify_outliers_iqr(df, feature_cols, id_column="Subject_ID", iqr_multiplier=1.5):
+def identify_outliers_iqr(df, feature_cols, iqr_multiplier=1.5):
     """
     Identify IQR-based outliers per feature.
     """
@@ -121,7 +113,7 @@ def correlation_matrix(df, feature_cols, save_path=None, method="pearson", task_
     """
     corr = df[feature_cols].corr(method=method)
 
-    plt.figure(figsize=20, 18)
+    plt.figure(figsize=(20, 18))
     sns.heatmap(corr, cmap="coolwarm", annot=False, center=0)
     plt.xticks(rotation=90, fontsize=8, ha="right")
     plt.yticks(rotation=0, fontsize=8)
@@ -131,8 +123,6 @@ def correlation_matrix(df, feature_cols, save_path=None, method="pearson", task_
     if save_path:
         plt.savefig(save_path, dpi=300)
         print(f"saved correlation matrix to: {save_path}")
-
-    plt.show()
 
     return corr
 

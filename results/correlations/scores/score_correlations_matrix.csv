@@ -1,0 +1,4 @@
+,PictureNamingScore,SemanticFluencyScore,PhonemicFluencyScore
+PictureNamingScore,1.0,0.3054575467199522,0.1323570955815532
+SemanticFluencyScore,0.3054575467199522,1.0,0.35908907892026426
+PhonemicFluencyScore,0.1323570955815532,0.35908907892026426,1.0

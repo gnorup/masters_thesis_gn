@@ -1,3 +1,0 @@
-task,target,model,criterion,best_threshold,precision,recall,f1,threshold
-picnicScene,SemanticFluencyScore,full,max_f1,0.28672829419674983,0.3620689655172414,0.5121951219512195,0.42424242424242425,
-picnicScene,SemanticFluencyScore,full,recall>=0.80,,0.25287356321839083,0.8048780487804879,,0.18560940163717482

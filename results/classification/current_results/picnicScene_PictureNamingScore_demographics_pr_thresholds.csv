@@ -1,3 +1,0 @@
-task,target,model,criterion,best_threshold,precision,recall,f1,threshold
-picnicScene,PictureNamingScore,demographics,max_f1,0.5301601046365559,0.21951219512195122,0.24545454545454545,0.2317596566523605,
-picnicScene,PictureNamingScore,demographics,recall>=0.80,,0.11875843454790823,0.8,,0.08265576156033923

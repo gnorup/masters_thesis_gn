@@ -1,0 +1,4 @@
+target,model,task_A,task_B,mean_diff,ci_low,ci_high,p_raw,p_adj,n_subjects
+SemanticFluencyScore,full,picture_description_1min,picture_description,-0.04279423122445232,-0.06756057145116687,-0.017029191283646248,0.0,0.0,988
+SemanticFluencyScore,full,picture_description_1min,picture_description_2min,-0.031803650800742475,-0.05454407587977481,-0.008782960528208658,0.006,0.012,988
+SemanticFluencyScore,full,picture_description_2min,picture_description,-0.010990580423709843,-0.026288278261841342,0.0030721765314333854,0.121,0.121,988

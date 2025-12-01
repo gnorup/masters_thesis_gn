@@ -1,0 +1,57 @@
+run:
+  # data preparation
+  create_splits: false
+  calculate_features: false
+  clean_features: false
+  calculate_picture_description_features: false
+  clean_picture_description: false
+
+  # hyperparameter tuning
+  hyperparam_tuning_regression: false
+  hyperparam_tuning_classification: false
+
+  # regression
+  run_random_forest_regression: true
+  run_statistical_comparisons_rf: true
+  run_linear_regression: true
+  run_statistical_comparisons_linear: true
+
+  # post-analyses for random forest regression
+  run_shap_analyses: true
+  run_bias_analyses: true
+  run_picture_description_comparison: true
+
+  # classification
+  run_classification: true
+
+  # correlation
+  run_correlation_analyses: true
+
+
+settings:
+  # which tasks and targets to consider
+  tasks: [picnicScene, cookieTheft, journaling]
+  targets: [PictureNamingScore, SemanticFluencyScore, PhonemicFluencyScore]
+
+hyperparameter_tuning:
+  regression:
+    task_name: picnicScene
+    target: SemanticFluencyScore
+    model_name: full
+    test_half_label: 1
+    n_iter_random: 100
+    refine_with_grid: true
+
+  classification:
+    task_name: picnicScene
+    target: SemanticFluencyScore
+    model_name: full
+    test_half_label: 1
+    n_iter_random: 100
+    refine_with_grid: true
+
+paths:
+  rf_predictions: results/regression/random_forest/oof_preds_all_scores.csv
+  rf_results_dir: results/regression/random_forest
+  linear_predictions: results/regression/linear/oof_preds_all_scores.csv
+  linear_results_dir: results/regression/linear

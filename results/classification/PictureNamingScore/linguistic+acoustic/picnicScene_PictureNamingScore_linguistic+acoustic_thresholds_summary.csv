@@ -1,0 +1,3 @@
+task,target,model,criterion,threshold,precision,recall,f1
+picnicScene,PictureNamingScore,linguistic+acoustic,max_f1,0.25730910685817093,0.3484848484848485,0.4423076923076923,0.3898305084745763
+picnicScene,PictureNamingScore,linguistic+acoustic,recall>=0.80,0.07749473194663897,0.12923076923076923,0.8076923076923077,0.26700251889168763

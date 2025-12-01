@@ -1,0 +1,10 @@
+task,model,A,B,mean_diff,ci_low,ci_high,p_raw,p_adj,n_subjects
+picnicScene,full,SemanticFluencyScore,PhonemicFluencyScore,0.17739334972740048,0.09268118704046359,0.26312006013348177,0.0,0.0,969
+picnicScene,full,PictureNamingScore,PhonemicFluencyScore,0.21548334888953827,0.08791390835148846,0.3369981560220532,0.002,0.004,959
+picnicScene,full,PictureNamingScore,SemanticFluencyScore,0.03977774453170662,-0.1310863092422114,0.19388904123021133,0.589,0.589,958
+cookieTheft,full,SemanticFluencyScore,PhonemicFluencyScore,0.16143934144769242,0.08549181529330867,0.23902697629370895,0.0,0.0,969
+cookieTheft,full,PictureNamingScore,PhonemicFluencyScore,0.15421218953757818,0.03218570113995298,0.2722328323819406,0.011,0.022,959
+cookieTheft,full,PictureNamingScore,SemanticFluencyScore,-0.009253884355528073,-0.12999345281842445,0.1191486742871432,0.898,0.898,958
+journaling,full,SemanticFluencyScore,PhonemicFluencyScore,0.17473782501809582,0.11198184210062245,0.23871687044516643,0.0,0.0,969
+journaling,full,PictureNamingScore,PhonemicFluencyScore,0.10962785261071738,0.01597676362766257,0.19723460425490943,0.02,0.04,959
+journaling,full,PictureNamingScore,SemanticFluencyScore,-0.06223011689307914,-0.15002866683905605,0.030773085710340597,0.175,0.175,958

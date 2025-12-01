@@ -1,4 +1,0 @@
-task,model,A,B,mean_diff,ci_low,ci_high,p_boot,n_subjects,n_boot,p_raw,p_adj,adjust
-picnicScene,full,PictureNamingScore,PhonemicFluencyScore,0.20350691568420679,0.1226149200268915,0.27753017944810576,0.0,959,1000,0.0,0.0,holm
-picnicScene,full,SemanticFluencyScore,PhonemicFluencyScore,0.13283801607698403,0.09463890196994627,0.17043643718013168,0.0,969,1000,0.0,0.0,holm
-picnicScene,full,PictureNamingScore,SemanticFluencyScore,0.07467391385639521,-0.00585393102352712,0.14963485098197438,0.058,958,1000,0.058,0.058,holm

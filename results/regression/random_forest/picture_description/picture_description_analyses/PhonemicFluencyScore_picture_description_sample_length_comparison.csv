@@ -1,0 +1,4 @@
+target,model,task_A,task_B,mean_diff,ci_low,ci_high,p_raw,p_adj,n_subjects
+PhonemicFluencyScore,full,picture_description_1min,picture_description_2min,0.006883532769155884,-0.012054194784583121,0.02447350434016791,0.431,1.0,988
+PhonemicFluencyScore,full,picture_description_1min,picture_description,0.005607549677105736,-0.015164789968498795,0.02466516714035586,0.57,1.0,988
+PhonemicFluencyScore,full,picture_description_2min,picture_description,-0.0012759830920501475,-0.014588706893876594,0.01184519666945349,0.845,1.0,988

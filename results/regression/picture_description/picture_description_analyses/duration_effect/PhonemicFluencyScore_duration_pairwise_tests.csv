@@ -1,4 +1,0 @@
-target,model,task_A,task_B,mean_diff,ci_low,ci_high,p_raw,p_adj,adjust,n_subjects,n_boot
-PhonemicFluencyScore,full,picture_description_1min,picture_description_2min,0.003989322985688963,-0.014639940859637933,0.02147080265296089,0.723,1.0,holm,981,1000
-PhonemicFluencyScore,full,picture_description_1min,picture_description,-0.001983866489251199,-0.022136333048814044,0.017706225387237113,0.789,1.0,holm,981,1000
-PhonemicFluencyScore,full,picture_description_2min,picture_description,-0.005973189474940161,-0.018235096378826324,0.005959721183165961,0.349,1.0,holm,981,1000

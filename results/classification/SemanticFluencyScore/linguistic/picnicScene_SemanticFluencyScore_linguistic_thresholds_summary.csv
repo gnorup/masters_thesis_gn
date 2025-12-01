@@ -1,0 +1,3 @@
+task,target,model,criterion,threshold,precision,recall,f1
+picnicScene,SemanticFluencyScore,linguistic,max_f1,0.24082742183520062,0.25766871165644173,0.5753424657534246,0.35593220338983056
+picnicScene,SemanticFluencyScore,linguistic,recall>=0.80,0.14239139255154815,0.1861198738170347,0.8082191780821918,0.3813953488372093

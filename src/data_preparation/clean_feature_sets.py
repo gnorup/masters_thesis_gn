@@ -5,7 +5,7 @@ import pandas as pd
 # add project root
 sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
-from config.constants import GIT_DIRECTORY
+from config.constants import GIT_DIRECTORY, TASKS, ID_COL
 from data_preparation.data_cleaning_helpers import (
     filter_invalid_tasks,
     drop_all_egemaps_except,
@@ -18,9 +18,6 @@ from data_preparation.data_cleaning_helpers import (
     correlation_matrix
 )
 
-# config
-TASKS = ["cookieTheft", "picnicScene", "journaling"]
-
 # paths
 FEATURES_DIR = os.path.join(GIT_DIRECTORY, "results", "features")
 OUTPUT_DIR = os.path.join(FEATURES_DIR, "cleaned")
@@ -32,13 +29,6 @@ CORR_DIR = os.path.join(GIT_DIRECTORY, "results", "data_preparation", "correlate
 os.makedirs(MISSING_DIR, exist_ok=True)
 os.makedirs(OUTLIER_DIR, exist_ok=True)
 os.makedirs(CORR_DIR, exist_ok=True)
-
-# subjects identified as n_words < 15
-SUBJECTS_TO_REMOVE = {
-    "cookieTheft": [138, 141, 469, 516, 1065],
-    "picnicScene": [390],
-    "journaling": [474, 484],
-}
 
 # eGeMAPS selection: keep shimmer, jitter and top 10 most important features from Niemelä et al. (2024)
 eGeMAPS = [
@@ -56,22 +46,17 @@ eGeMAPS = [
     "eGeMAPS_shimmerLocaldB_sma3nz_amean",
 ]
 
-# features from intercorrelated feature pairs to drop
-# selection based on feature importance in previous studies and or higher number of missing / zero values
-CORR_DROP = {
+# features from intercorrelated feature pairs to drop -> adjust according to correlation matrix
+# (selected from pairs based on feature importance in previous studies / NaNs)
+corr_drop = {
     "cookieTheft": [
         "mattr_50",
         "mattr_40",
         "mattr_20",
+        "ttr",
         "speech_rate_words",
         "long_pause_count",
         "pause_ratio",
-        "eGeMAPS_loudness_sma3_percentile80.0",
-        "eGeMAPS_F1amplitudeLogRelF0_sma3nz_amean",
-        "eGeMAPS_F2amplitudeLogRelF0_sma3nz_amean",
-        "eGeMAPS_F2amplitudeLogRelF0_sma3nz_stddevNorm",
-        "eGeMAPS_mfcc4V_sma3nz_amean",
-        "eGeMAPS_StddevVoicedSegmentLengthSec",
     ],
     "picnicScene": [
         "mattr_50",
@@ -82,11 +67,7 @@ CORR_DROP = {
         "ttr",
         "pause_word_ratio",
         "pause_ratio",
-        "eGeMAPS_loudness_sma3_percentile80.0",
-        "eGeMAPS_F1amplitudeLogRelF0_sma3nz_amean",
-        "eGeMAPS_F2amplitudeLogRelF0_sma3nz_amean",
-        "eGeMAPS_F2amplitudeLogRelF0_sma3nz_stddevNorm",
-        "eGeMAPS_mfcc4V_sma3nz_amean",
+        "eGeMAPS_mfcc3_sma3_amean",
     ],
     "journaling": [
         "mattr_50",
@@ -97,12 +78,6 @@ CORR_DROP = {
         "ttr",
         "INTJ",
         "pause_ratio",
-        "total_speech_duration",
-        "eGeMAPS_loudness_sma3_percentile80.0",
-        "eGeMAPS_F1amplitudeLogRelF0_sma3nz_amean",
-        "eGeMAPS_F2amplitudeLogRelF0_sma3nz_amean",
-        "eGeMAPS_F2amplitudeLogRelF0_sma3nz_stddevNorm",
-        "eGeMAPS_StddevVoicedSegmentLengthSec",
     ],
 }
 
@@ -117,13 +92,13 @@ def clean_task(task_name):
     features_path = os.path.join(FEATURES_DIR, f"{task_name}.csv")
     df_features = pd.read_csv(features_path)
 
-    df_features["Subject_ID"] = df_features["Subject_ID"].astype(str)
+    df_features[ID_COL] = df_features[ID_COL].astype(str)
 
     ### 1) filter for people with missing tasks (when n_words < 15)
     df_features, removed_short = filter_invalid_tasks(
         df_features,
         min_words=15,
-        id_column="Subject_ID",
+        id_column=ID_COL,
         n_words_col="n_words",
     )
 
@@ -135,7 +110,7 @@ def clean_task(task_name):
     print(f"[2] dropped {len(dropped_eg)} eGeMAPS features.")
 
     ### 3) remove features that have more than 20% missing/zero values
-    feature_cols = [c for c in df_features.columns if c not in ["Subject_ID"]]
+    feature_cols = [c for c in df_features.columns if c not in [ID_COL]]
     missing_table = compute_missing_zero_table(df_features, feature_cols)
     missing_save_path = os.path.join(MISSING_DIR, f"{task_name}_missing_data.csv")
     missing_table.to_csv(missing_save_path)
@@ -147,15 +122,15 @@ def clean_task(task_name):
         missing_table,
         threshold=20.0,
     )
+    print(f"[3] removed {len(removed_missing_zero)} features (> 20% missing/zeros).")
 
     # recompute feature_cols after dropping
-    feature_cols = [c for c in df_feat.columns if c != "Subject_ID"]
+    feature_cols = [c for c in df_feat.columns if c != ID_COL]
 
     ### 4) remove features that have more than 10% outliers (defined by IQR)
     outlier_df = identify_outliers_iqr(
         df_feat,
         feature_cols=feature_cols,
-        id_column="Subject_ID",
         iqr_multiplier=1.5,
     )
     outlier_save_path = os.path.join(OUTLIER_DIR, f"{task_name}_iqr_outliers.csv")
@@ -169,8 +144,10 @@ def clean_task(task_name):
         percent_threshold=10.0,
     )
 
+    print(f"[4] removed {len(removed_outliers)} features (> 10% outliers).")
+
     # update feature list again
-    feature_cols = [c for c in df_feat.columns if c != "Subject_ID"]
+    feature_cols = [c for c in df_feat.columns if c != ID_COL]
 
     ### 5) remove strongly intercorrelated features (one of a pair of r >|.95| correlated features)
 
@@ -200,7 +177,7 @@ def clean_task(task_name):
     print(f"[5] found {len(highly_correlated)} highly correlated feature pairs (|r| > {threshold})")
     print(f"[5] saved highly correlated feature pairs to {correlated_features_path}")
 
-    corr_drop_list = CORR_DROP.get(task_name, [])
+    corr_drop_list = corr_drop.get(task_name, [])
     df_feat, removed_corr = drop_correlated_features_manual(
         df_feat,
         corr_drop_list,
@@ -209,7 +186,7 @@ def clean_task(task_name):
     print(f"[5] dropped {len(removed_corr)} correlated features.")
 
     ### 6) impute mean for missing values
-    df_clean = impute_mean_dataframe(df_feat, exclude_cols=["Subject_ID"])
+    df_clean = impute_mean_dataframe(df_feat, exclude_cols=[ID_COL])
 
     # save final cleaned feature sets
     final_path = os.path.join(OUTPUT_DIR, f"{task_name}_cleaned.csv")

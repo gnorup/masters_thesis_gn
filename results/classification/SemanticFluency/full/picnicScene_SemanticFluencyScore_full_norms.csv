@@ -1,2 +1,0 @@
-task,target,model,mean,std,low_threshold,high_threshold,n_total,n_low,n_notlow
-picnicScene,SemanticFluencyScore,full,20.776649746192895,5.686317816400011,15.090331929792884,26.462967562592908,986,164,822

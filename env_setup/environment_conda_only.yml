@@ -1,9 +1,0 @@
-name: nlp_env
-channels:
-  - https://repo.anaconda.com/pkgs/main
-  - https://repo.anaconda.com/pkgs/r
-dependencies:
-  - python=3.11
-  - ffmpeg
-  - openpyxl
-prefix: /opt/anaconda3/envs/nlp_env
