@@ -1,7 +1,6 @@
 # Calculate feature-score, score-score and demographics-score correlations
 
 import os
-import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,11 +11,6 @@ from matplotlib.ticker import MultipleLocator, MaxNLocator, FormatStrFormatter
 import matplotlib as mpl
 mpl.rcParams["font.family"] = "Arial"
 sns.set(style="whitegrid", rc={"font.family": "Arial"})
-
-# add project root
-PROJECT_ROOT = "/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src"
-if PROJECT_ROOT not in sys.path:
-    sys.path.append(PROJECT_ROOT)
 
 from config.constants import GIT_DIRECTORY, ID_COL, TASKS, SCORES
 from data_preparation.data_handling import load_demographics

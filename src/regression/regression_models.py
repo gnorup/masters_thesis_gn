@@ -1,11 +1,7 @@
-import sys
 import os
 import pandas as pd
 import numpy as np
 from sklearn.dummy import DummyRegressor
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 from config.constants import GIT_DIRECTORY, TASKS, SCORES, ID_COL, N_BOOT, CI, RANDOM_STATE
 

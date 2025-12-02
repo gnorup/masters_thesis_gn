@@ -1,15 +1,11 @@
 # calculate features for combined picture description (cookieTheft + picnicScene), capped at 60s, 120s, & 300s
 
 import os
-import sys
 import hashlib
 import random
 import tempfile
 import pandas as pd
 from pydub import AudioSegment
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 from config.constants import DATA_DIRECTORY, GIT_DIRECTORY, ID_COL
 

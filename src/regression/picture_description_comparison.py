@@ -1,12 +1,8 @@
 # compare different picture description sample lengths (1min, 2min, ≤5min)
 
 import os
-import sys
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 from config.constants import GIT_DIRECTORY, SCORES, ID_COL, N_BOOT, RANDOM_STATE, PD_TASKS
 from config.feature_sets import get_linguistic_features, get_acoustic_features, get_demographic_features

@@ -1,9 +1,4 @@
-import sys
 import os
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
-
 from sklearn.ensemble import RandomForestRegressor
 
 from config.constants import GIT_DIRECTORY

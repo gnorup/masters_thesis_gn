@@ -1,15 +1,12 @@
 # tune hyperparameters for Random Forest regression
 
-import os, sys
+import os
 import numpy as np
 import pandas as pd
-from typing import Any
 from scipy.stats import randint
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import KFold, RandomizedSearchCV, GridSearchCV
 
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 from config.constants import GIT_DIRECTORY, ID_COL, RANDOM_STATE
 from data_preparation.data_handling import (

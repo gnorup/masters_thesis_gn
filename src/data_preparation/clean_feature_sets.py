@@ -1,9 +1,5 @@
 import os
-import sys
 import pandas as pd
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 from config.constants import GIT_DIRECTORY, TASKS, ID_COL
 from data_preparation.data_cleaning_helpers import (

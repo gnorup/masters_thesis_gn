@@ -1,5 +1,4 @@
 import os
-import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -15,11 +14,6 @@ from sklearn.metrics import (
     recall_score, precision_score, f1_score, matthews_corrcoef,
     precision_recall_curve, average_precision_score
 )
-
-# add project root
-PROJECT_ROOT = "/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src"
-if PROJECT_ROOT not in sys.path:
-    sys.path.append(PROJECT_ROOT)
 
 from config.constants import GIT_DIRECTORY, RANDOM_STATE, CI, N_BOOT, SCORES, ID_COL
 from config.feature_sets import get_linguistic_features, get_acoustic_features, get_demographic_features

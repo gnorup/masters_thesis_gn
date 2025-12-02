@@ -1,4 +1,3 @@
-import sys
 import pandas as pd
 import numpy as np
 from pandas.api.types import CategoricalDtype
@@ -6,9 +5,6 @@ from sklearn.metrics import r2_score
 from itertools import combinations
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from statsmodels.stats.multitest import multipletests
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 from config.constants import RANDOM_STATE, N_BOOT, CI, ID_COL, SCORES, TASKS, METRICS
 

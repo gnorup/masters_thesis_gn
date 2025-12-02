@@ -1,4 +1,3 @@
-import sys
 import re
 import os
 import math
@@ -11,9 +10,6 @@ from matplotlib.ticker import MultipleLocator, AutoLocator
 import matplotlib.transforms as mtransforms
 from matplotlib.patches import PathPatch
 from pandas.api.types import CategoricalDtype
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 from config.constants import RANDOM_STATE, N_BOOT, CI, ALPHA
 from data_preparation.data_handling import subset_in_order, make_age_binary_groups

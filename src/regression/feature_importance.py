@@ -1,16 +1,12 @@
 # SHAP feature importance for Random Forest regression
 
 import os
-import sys
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 import shap
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# add project root
-sys.path.append("/Users/gilanorup/Desktop/Studium/MSc/MA/code/masters_thesis_gn/src")
 
 from config.constants import GIT_DIRECTORY, TASKS, SCORES, ID_COL
 from config.feature_sets import get_linguistic_features, get_acoustic_features, get_demographic_features
@@ -486,17 +482,15 @@ def plot_shap_waterfall_full_model(task_name, target, shap_dir, max_display=9, r
     axes = fig.get_axes()
     main_ax = axes[0]
 
-    # 1) turn OFF any global / seaborn grid & keep white background
     for a in axes:
         a.grid(False)
         a.set_axisbelow(False)
         a.set_facecolor("white")
 
-    # 2) add a *subtle* horizontal grid only on the main axis
     main_ax.grid(
         True,
-        axis="y",  # horizontal lines
-        linestyle=":",  # dotted
+        axis="y",
+        linestyle=":",
         linewidth=0.5,
         color="0.85",
     )

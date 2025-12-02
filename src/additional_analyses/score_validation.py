@@ -1,9 +1,5 @@
 import os
-import sys
-import numpy as np
 import pandas as pd
-import pingouin as pg
-from scipy import stats
 
 from additional_analyses.icc import compute_icc
 
